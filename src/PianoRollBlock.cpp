@@ -14,7 +14,6 @@ Block::Block(int x, int y){
     
     blockColor = ofColor(50, 100, 20);
     lineColor = ofColor(150, 10, 20);
-    
 }
 
 

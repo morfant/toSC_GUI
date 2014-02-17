@@ -23,6 +23,7 @@ protected:
     int backWidth, backHeight;
     int frontWidth, frontHeight;
     int teum;
+    int numOfBlock = 0;
     ofColor fBoxCol, fStrokeCol, bBoxCol, bStrokeCol;
     ofRectangle frontPanel, movingPanel;
     
@@ -43,7 +44,7 @@ public:
     void makeBlock(int x, int y);
     void eraseBlock(int blockNum);
     void drawBlocks();
-    
+    int getBlockNum();
     
     // getter & setter
     int getX();

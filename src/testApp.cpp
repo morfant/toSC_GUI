@@ -159,7 +159,7 @@ void testApp::mousePressed(int x, int y, int button){
         case '2':
             cout << "erasing block" << endl;
             int delIdx = pianoRoll.blockAtMousePos(x, y);
-            cout << delIdx << endl;
+            cout << "delIdx: " << delIdx << endl;
             pianoRoll.eraseBlock(delIdx);
             break; //erase
     }
