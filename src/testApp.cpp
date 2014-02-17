@@ -15,6 +15,7 @@ void testApp::setup(){
 //--------------------------------------------------------------
 void testApp::update(){
     textInput.getIsMouseOver();
+    pianoRoll.update();
 
 }
 
@@ -29,6 +30,9 @@ void testApp::draw(){
     
     // TextInput
     textInput.draw();
+    
+    // PianoRoll
+    pianoRoll.draw();
     
 }
 
@@ -81,6 +85,19 @@ void testApp::keyPressed(int key){
     }
     
     
+    // keyMode
+    // 0 = normal, 1 = write, 2 = erase
+    if ('0' <= key && key <= '2') {
+        pianoRoll.setKeyMode(key);
+        if (key == '1') {
+            cout << "Write mode." << endl;
+        }else if(key == '2'){
+            cout << "Erase mode." << endl;
+        }else if(key == '0'){
+            cout << "Normal mode." << endl;
+        }
+    }
+    
     // sendOSC
     if (key==OF_KEY_RETURN) {
         sendOSC("/test", *text);
@@ -127,6 +144,26 @@ void testApp::mousePressed(int x, int y, int button){
 	m.setAddress("/mouse/button");
 	m.addStringArg("down");
 	sender.sendMessage(m);
+    
+    
+    //func int blockAtMousePos();
+    switch (pianoRoll.getKeyMode()) {
+            cout<<pianoRoll.getKeyMode()<<endl;
+        case '0':
+            cout << "Set Write or Erase mode first." << endl;
+            break; //normal
+        case '1':
+            cout << "writing block" << endl;
+            pianoRoll.makeBlock(x, y);
+            break; //write
+        case '2':
+            cout << "erasing block" << endl;
+            int delIdx = pianoRoll.blockAtMousePos(x, y);
+            cout << delIdx << endl;
+            pianoRoll.eraseBlock(delIdx);
+            break; //erase
+    }
+    
 }
 
 //--------------------------------------------------------------

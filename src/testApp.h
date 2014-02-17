@@ -3,6 +3,7 @@
 #include "ofMain.h"
 #include "ofxOsc.h"
 #include "MyTextInput.h"
+#include "pianoRoll.h"
 
 #define HOST "localhost"
 #define PORT 57120
@@ -32,6 +33,7 @@ class testApp : public ofBaseApp {
 		ofxOscSender sender;
     
     MyTextInput textInput = MyTextInput(10, 100);
+    PianoRoll pianoRoll = PianoRoll(0,0);
 
 };
 

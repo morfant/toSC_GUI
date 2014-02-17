@@ -93,7 +93,6 @@ MyTextInput::isFocus(int x, int y){
         isMouseOver = true;
         setColor(ofColor(255, 0, 0, 90), ofColor(255));
     }else{
-        cout << "xxx" << endl;
         isMouseOver = false;
         setColor(ofColor(255), ofColor(0));
     }

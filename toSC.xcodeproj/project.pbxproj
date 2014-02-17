@@ -15,6 +15,8 @@
 		62545d179c94265ca1389d4a /* OscOutboundPacketStream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 63a47ac60ffafc3bf093ec0f /* OscOutboundPacketStream.cpp */; };
 		640279ee111671bd026cb013 /* ofxOscReceiver.cpp in Sources */ = {isa = PBXBuildFile; fileRef = c2fac65c491d4231379f3298 /* ofxOscReceiver.cpp */; };
 		671F9AA418745E1600CD5652 /* MyTextInput.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 671F9AA218745E1500CD5652 /* MyTextInput.cpp */; };
+		6741765F18B22C120018A75A /* PianoRollBlock.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6741765D18B22C120018A75A /* PianoRollBlock.cpp */; };
+		6761590C189F8F8100D0DE47 /* pianoRoll.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6761590A189F8F8100D0DE47 /* pianoRoll.cpp */; };
 		67fe4c7b15c2f0478c8126c2 /* NetworkingUtils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3b361208cd4107e479f04e7b /* NetworkingUtils.cpp */; };
 		72a929d3561b8232a182abfc /* ofxOscBundle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 65eefa3da3526e9cdd9c21f9 /* ofxOscBundle.cpp */; };
 		879a251454401bc0b6e4f238 /* OscTypes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = d9bffbbf4cc43dee890b3c3e /* OscTypes.cpp */; };
@@ -91,6 +93,10 @@
 		65eefa3da3526e9cdd9c21f9 /* ofxOscBundle.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = ofxOscBundle.cpp; path = ../../../addons/ofxOsc/src/ofxOscBundle.cpp; sourceTree = SOURCE_ROOT; };
 		671F9AA218745E1500CD5652 /* MyTextInput.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MyTextInput.cpp; sourceTree = "<group>"; };
 		671F9AA318745E1600CD5652 /* MyTextInput.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyTextInput.h; sourceTree = "<group>"; };
+		6741765D18B22C120018A75A /* PianoRollBlock.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PianoRollBlock.cpp; sourceTree = "<group>"; };
+		6741765E18B22C120018A75A /* PianoRollBlock.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PianoRollBlock.h; sourceTree = "<group>"; };
+		6761590A189F8F8100D0DE47 /* pianoRoll.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pianoRoll.cpp; sourceTree = "<group>"; };
+		6761590B189F8F8100D0DE47 /* pianoRoll.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pianoRoll.h; sourceTree = "<group>"; };
 		6b65e6930994cc4b2d2b8b33 /* OscPacketListener.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = OscPacketListener.h; path = ../../../addons/ofxOsc/libs/oscpack/src/osc/OscPacketListener.h; sourceTree = SOURCE_ROOT; };
 		7689f8a0f3d0b7635a8c3104 /* ofxOscArg.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxOscArg.h; path = ../../../addons/ofxOsc/src/ofxOscArg.h; sourceTree = SOURCE_ROOT; };
 		81967292bfc87a0144bd32c6 /* ofxOscSender.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = ofxOscSender.cpp; path = ../../../addons/ofxOsc/src/ofxOscSender.cpp; sourceTree = SOURCE_ROOT; };
@@ -285,6 +291,10 @@
 				E4B69E1F0A3A1BDC003C02F2 /* testApp.h */,
 				671F9AA218745E1500CD5652 /* MyTextInput.cpp */,
 				671F9AA318745E1600CD5652 /* MyTextInput.h */,
+				6761590A189F8F8100D0DE47 /* pianoRoll.cpp */,
+				6761590B189F8F8100D0DE47 /* pianoRoll.h */,
+				6741765D18B22C120018A75A /* PianoRollBlock.cpp */,
+				6741765E18B22C120018A75A /* PianoRollBlock.h */,
 			);
 			path = src;
 			sourceTree = SOURCE_ROOT;
@@ -448,12 +458,14 @@
 			files = (
 				E4B69E200A3A1BDC003C02F2 /* main.cpp in Sources */,
 				E4B69E210A3A1BDC003C02F2 /* testApp.cpp in Sources */,
+				6741765F18B22C120018A75A /* PianoRollBlock.cpp in Sources */,
 				8f5205aef8861ef234f0651a /* ofxOscSender.cpp in Sources */,
 				72a929d3561b8232a182abfc /* ofxOscBundle.cpp in Sources */,
 				640279ee111671bd026cb013 /* ofxOscReceiver.cpp in Sources */,
 				671F9AA418745E1600CD5652 /* MyTextInput.cpp in Sources */,
 				5864ad82e20f15536d054ea3 /* ofxOscMessage.cpp in Sources */,
 				4adb88e2fb52e76a471065de /* ofxOscParameterSync.cpp in Sources */,
+				6761590C189F8F8100D0DE47 /* pianoRoll.cpp in Sources */,
 				a29d8c96ae042eceaa1bd4f3 /* NetworkingUtilsWin.cpp in Sources */,
 				28090deb5109115003e8f1c5 /* UdpSocketWin.cpp in Sources */,
 				510cafe035e576a4e1502d52 /* UdpSocket.cpp in Sources */,
