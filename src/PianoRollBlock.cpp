@@ -9,11 +9,18 @@
 #include "PianoRollBlock.h"
 
 Block::Block(int x, int y){
-    posX = x;
-    posY = y;
+    beginX = x;
+    beginY = y;
+    
+    width = 40;
+    height = 10;
     
     blockColor = ofColor(50, 100, 20);
     lineColor = ofColor(150, 10, 20);
+    
+    freq = 0.f;
+    amp = 0.f;
+    env = 0.f;
 }
 
 
@@ -23,21 +30,21 @@ Block::~Block(){
 
 void
 Block::setPos(int x, int y){
-    posX = x;
-    posY = y;
+    beginX = x;
+    beginY = y;
 }
 
 
 void
 Block::setPos(ofPoint arg_pos){
-    posX = arg_pos.x;
-    posY = arg_pos.y;
+    beginX = arg_pos.x;
+    beginY = arg_pos.y;
 }
 
 
 ofPoint
 Block::getPos(){
-    return ofPoint(posX, posY);
+    return ofPoint(beginX, beginY);
 }
 
 

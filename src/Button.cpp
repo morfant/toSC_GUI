@@ -14,8 +14,8 @@ Button::~Button(){
     width = 20;
     height = 20;
     ofColor bColor = ofColor(255);
-    ofColor fColorOn = ofColor(0);
-    ofColor fColorOff = ofColor(0, 100, 50);
+    ofColor fColorOn = ofColor(255, 0, 0);
+    ofColor fColorOff = ofColor(0);
     
     BUTTON_STATE butState = DEACTIVE;
     bisMouseOn = FALSE;
@@ -108,12 +108,15 @@ Button::draw(int posX, int posY){
 
 bool
 Button::isMouseOn(int x, int y){
-    if (ofInRange(x, posX, posX+width)
-        && ofInRange(y, posY, posY+height)){
-        cout << "Mouse is on button." << endl;
+    
+    ofPoint tPoint = ofPoint(x, y);
+    ofRectangle tRect = ofRectangle(posX, posY, width, height);
+    
+    if(isInsideRect(tPoint, tRect)){
+//        cout << "Mouse is on button." << endl;
         return TRUE;
     }else{
-        cout << "No mouse is on button." << endl;
+//        cout << "No mouse is on button." << endl;
         return FALSE;
     }
 }
@@ -136,9 +139,9 @@ Button_PLAY::draw(int _posX, int _posY){
     ofFill();
     ofRect(posX, posY, width, height);
 
-    if(butState == ACTIVE) ofSetColor(fColorOff);
-    else ofSetColor(fColorOn);
-    ofTriangle(posX+5, posY+5, posX+10, posY+10, posX+5, posY+15);
+    if(butState == ACTIVE) ofSetColor(fColorOn);
+    else ofSetColor(fColorOff);
+    ofTriangle(posX+5, posY+5, posX+15, posY+10, posX+5, posY+15);
     ofPopStyle();
 }
 

@@ -9,6 +9,7 @@
 #pragma once
 #include <iostream>
 #include "ofMain.h"
+#include "Functions.h"
 
 typedef enum { ACTIVE, DEACTIVE } BUTTON_STATE;
 
@@ -19,8 +20,8 @@ protected:
     int width = 20;
     int height = 20;
     ofColor bColor = ofColor(255);
-    ofColor fColorOn = ofColor(0);
-    ofColor fColorOff = ofColor(0, 100, 50);
+    ofColor fColorOn = ofColor(255, 0, 0);
+    ofColor fColorOff = ofColor(0);
     
     BUTTON_STATE butState = DEACTIVE;
     

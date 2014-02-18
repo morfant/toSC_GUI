@@ -13,16 +13,16 @@ PianoRoll::PianoRoll(int x, int y){
     posX = x;
     posY = y;
     teum = 11;
-    frontWidth = 300;
+    keyPanelWidth = 300;
     
-    backWidth = ofGetWindowWidth() - (frontWidth + teum);
-    backHeight = frontHeight = ofGetWindowHeight();
+    rollPanelWidth = ofGetWindowWidth() - (keyPanelWidth + teum);
+    rollPanelHeight = keyPanelHeight = ofGetWindowHeight();
 
-    fposX = ofGetWindowWidth() - backWidth;
-    fposY = 0;
+    rollPanelPosX = ofGetWindowWidth() - rollPanelWidth;
+    rollPanelPosY = 0;
     
-    movingPanel = ofRectangle(x + teum + frontWidth, y, backWidth, backHeight);
-    frontPanel = ofRectangle(x, y, frontWidth, frontHeight);
+    rollPanel = ofRectangle(x + teum + keyPanelWidth, y, rollPanelWidth, rollPanelHeight);
+    keyPanel = ofRectangle(x, y, keyPanelWidth, keyPanelHeight);
     
 
     fBoxCol = ofColor(255, 0, 0);
@@ -36,7 +36,7 @@ PianoRoll::PianoRoll(int x, int y){
     
     // Bar
     playSpeed = 2;
-    curPos = fposX;
+    curPos = rollPanelPosX;
     playBar = Bar(curPos);
     
     // Buttons
@@ -98,9 +98,10 @@ PianoRoll::blockAtMousePos(int x, int y){
             int posY = blocks[i].getPos().y;
             int height = blocks[i].getHeight();
             
-            if (ofInRange(x, posX, posX+width)
-                && ofInRange(y, posY, posY+height)){
-                cout << "block on mouse: " << i << endl;
+            ofRectangle tRect = ofRectangle(posX, posY, width, height);
+            ofPoint tPoint = ofPoint(x, y);
+
+            if(isInsideRect(tPoint, tRect)){
                 return i;
             }else{
                 if (i == 0) {
@@ -132,9 +133,20 @@ PianoRoll::getPlayButtonState(){
 }
 
 
+// Control
+bool
+PianoRoll::getMouseIsOnRollPanel(ofPoint testPoint){
+    return isInsideRect(testPoint, rollPanel);
+}
+
+bool
+PianoRoll::getMouseIsOnKeyPanel(ofPoint testPoint){
+    return isInsideRect(testPoint, keyPanel);
+}
+
+
 void
 PianoRoll::drawBlocks(){
-    
     if(blocks.size() > 0){
         for (int i = blocks.size()-1; i >= 0; i--) {
             // Get block point and make some shape
@@ -155,7 +167,7 @@ PianoRoll::update(){
     if(getPlayButtonState() == ACTIVE){
         curPos = curPos + playSpeed;
         if(curPos >= ofGetWindowWidth()){
-            curPos = fposX;
+            curPos = rollPanelPosX;
         }
         playBar.setPos(curPos);
     }
@@ -168,20 +180,20 @@ PianoRoll::draw(){
     ofPushStyle();
     ofFill();
     ofSetColor(bBoxCol);
-    ofRect(movingPanel);
+    ofRect(rollPanel);
     ofNoFill();
     ofSetColor(bStrokeCol);
-    ofRect(movingPanel);
+    ofRect(rollPanel);
     ofPopStyle();
     
     // Front panel - static
     ofPushStyle();
     ofFill();
     ofSetColor(fBoxCol);
-    ofRect(frontPanel);
+    ofRect(keyPanel);
     ofNoFill();
     ofSetColor(fStrokeCol);
-    ofRect(frontPanel);
+    ofRect(keyPanel);
     ofPopStyle();
     
     drawBlocks();

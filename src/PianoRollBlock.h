@@ -13,14 +13,15 @@
 class Block{
 
 protected:
-    int posX = ofGetMouseX();
-    int posY = ofGetMouseY();
+    int beginX, beginY;
+    int endX, endY;
     
-    int width = 40;
-    int height = 10;
+    int width, height;
     
     ofColor blockColor;
     ofColor lineColor;
+    
+    float freq, amp, env;
 
 public:
     Block(int x, int y);
