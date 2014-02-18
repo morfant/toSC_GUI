@@ -58,6 +58,17 @@ void testApp::keyPressed(int key){
 //        cout << *(textInput.getText()) << endl;
     }
     
+    // PlayBar speed
+    if (key == '{' && playSpeed >= 0) {
+        playSpeed--;
+        pianoRoll.setPlaySpeed(playSpeed);
+    }
+
+    if (key == '}'&& playSpeed <= 100) {
+        playSpeed++;
+        pianoRoll.setPlaySpeed(playSpeed);
+    }
+    
     
     if (key==OF_KEY_BACKSPACE){
         if (textPos>0){

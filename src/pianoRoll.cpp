@@ -30,6 +30,11 @@ PianoRoll::PianoRoll(int x, int y){
     
     // Blocks
     numOfBlock = 0;
+    
+    // Bar
+    playBar = Bar();
+    playSpeed = 0;
+    curPos = playBar.getPos();
 }
 
 PianoRoll::~PianoRoll(){
@@ -45,6 +50,18 @@ int
 PianoRoll::getKeyMode(){
     return keyMode;
 };
+
+// PlayBar
+void
+PianoRoll::setPlaySpeed(int speedX){
+    playSpeed = speedX;
+}
+
+int
+PianoRoll::getPlaySpeed(){
+    return playSpeed;
+}
+
 
 // Blocks
 int
@@ -121,7 +138,8 @@ PianoRoll::drawBlocks(){
 
 void
 PianoRoll::update(){
-
+    curPos = curPos + playSpeed;
+    playBar.setPos(curPos);
 }
 
 void
@@ -148,5 +166,27 @@ PianoRoll::draw(){
     ofPopStyle();
     
     drawBlocks();
-
+    playBar.draw();
+    
+    playButton.draw(200, 200);
+    
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

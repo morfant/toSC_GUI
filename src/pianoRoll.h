@@ -11,6 +11,8 @@
 #include <iostream>
 #include "ofMain.h"
 #include "PianoRollBlock.h"
+#include "Bar.h"
+#include "Button.h"
 
 //enum keyMode {
 //    NORMAL, WRITE, ERASE
@@ -30,8 +32,16 @@ protected:
     bool isMouseOver;
     
     vector<Block> blocks;
-    
     int keyMode = 0;
+    
+    // Bar
+    Bar playBar;
+    int curPos;
+    int playSpeed = 0;
+    
+    // Buttons
+    Button_PLAY playButton;
+    
     
     
 public:
@@ -57,6 +67,9 @@ public:
     
     void setKeyMode(int mode);
     int getKeyMode();
+    
+    void setPlaySpeed(int speedX);
+    int getPlaySpeed();
     
     bool isInRange(int specNum, int min, int max);
     int blockAtMousePos(int x, int y);
