@@ -9,7 +9,10 @@
 #include "Bar.h"
 
 Bar::Bar(){
-    posX = 200;
+}
+
+Bar::Bar(int x){
+    posX = x;
     color = ofColor(0);
 }
 

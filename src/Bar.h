@@ -19,6 +19,7 @@ protected:
     
 public:
     Bar();
+    Bar(int x);
     ~Bar();
     
     void setPos(int x);

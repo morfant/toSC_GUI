@@ -18,6 +18,9 @@ PianoRoll::PianoRoll(int x, int y){
     backWidth = ofGetWindowWidth() - (frontWidth + teum);
     backHeight = frontHeight = ofGetWindowHeight();
 
+    fposX = ofGetWindowWidth() - backWidth;
+    fposY = 0;
+    
     movingPanel = ofRectangle(x + teum + frontWidth, y, backWidth, backHeight);
     frontPanel = ofRectangle(x, y, frontWidth, frontHeight);
     
@@ -32,9 +35,12 @@ PianoRoll::PianoRoll(int x, int y){
     numOfBlock = 0;
     
     // Bar
-    playBar = Bar();
-    playSpeed = 0;
-    curPos = playBar.getPos();
+    playSpeed = 2;
+    curPos = fposX;
+    playBar = Bar(curPos);
+    
+    // Buttons
+    pState = DEACTIVE;
 }
 
 PianoRoll::~PianoRoll(){
@@ -42,11 +48,11 @@ PianoRoll::~PianoRoll(){
 }
 
 void
-PianoRoll::setKeyMode(int mode){
+PianoRoll::setKeyMode(MODE_STATE mode){
     keyMode = mode;
 };
 
-int
+MODE_STATE
 PianoRoll::getKeyMode(){
     return keyMode;
 };
@@ -82,15 +88,6 @@ PianoRoll::eraseBlock(int blockNum){
     }
 }
 
-bool
-PianoRoll::isInRange(int specNum, int min, int max){
-    if (min <= specNum && specNum <= max) {
-        return true;
-    }else{
-        return false;
-    }
-}
-
 int
 PianoRoll::blockAtMousePos(int x, int y){
     if(blocks.size() > 0){
@@ -101,8 +98,8 @@ PianoRoll::blockAtMousePos(int x, int y){
             int posY = blocks[i].getPos().y;
             int height = blocks[i].getHeight();
             
-            if (isInRange(x, posX, posX+width)
-                && isInRange(y, posY, posY+height)){
+            if (ofInRange(x, posX, posX+width)
+                && ofInRange(y, posY, posY+height)){
                 cout << "block on mouse: " << i << endl;
                 return i;
             }else{
@@ -117,6 +114,23 @@ PianoRoll::blockAtMousePos(int x, int y){
         return -2;
     }
 }
+
+// Buttons
+Button_PLAY*
+PianoRoll::getPlayButton(){
+    return &playButton;
+}
+
+void
+PianoRoll::setPlayButtonState(BUTTON_STATE state){
+    playButton.setState(state);
+}
+
+BUTTON_STATE
+PianoRoll::getPlayButtonState(){
+    return playButton.getState();
+}
+
 
 void
 PianoRoll::drawBlocks(){
@@ -138,8 +152,13 @@ PianoRoll::drawBlocks(){
 
 void
 PianoRoll::update(){
-    curPos = curPos + playSpeed;
-    playBar.setPos(curPos);
+    if(getPlayButtonState() == ACTIVE){
+        curPos = curPos + playSpeed;
+        if(curPos >= ofGetWindowWidth()){
+            curPos = fposX;
+        }
+        playBar.setPos(curPos);
+    }
 }
 
 void

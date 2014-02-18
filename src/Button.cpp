@@ -17,7 +17,8 @@ Button::~Button(){
     ofColor fColorOn = ofColor(0);
     ofColor fColorOff = ofColor(0, 100, 50);
     
-    BUT_STATE butState = OFF;
+    BUTTON_STATE butState = DEACTIVE;
+    bisMouseOn = FALSE;
 }
 
 Button::Button(int x, int y){
@@ -29,7 +30,7 @@ Button::Button(int x, int y){
     ofColor fColorOn = ofColor(0);
     ofColor fColorOff = ofColor(0, 100, 50);
     
-    BUT_STATE butState = OFF;
+    BUTTON_STATE butState = DEACTIVE;
 }
 
 void
@@ -91,11 +92,11 @@ Button::getFColorOff(){
 }
 
 void
-Button::setState(BUT_STATE state){
+Button::setState(BUTTON_STATE state){
     butState = state;
 }
 
-BUT_STATE
+BUTTON_STATE
 Button::getState(){
     return butState;
 }
@@ -105,7 +106,20 @@ Button::draw(int posX, int posY){
     
 }
 
+bool
+Button::isMouseOn(int x, int y){
+    if (ofInRange(x, posX, posX+width)
+        && ofInRange(y, posY, posY+height)){
+        cout << "Mouse is on button." << endl;
+        return TRUE;
+    }else{
+        cout << "No mouse is on button." << endl;
+        return FALSE;
+    }
+}
+
 // Real Buttons
+//---------------- PlayButton ----------------
 Button_PLAY::Button_PLAY() : Button(0, 0){
 }
 
@@ -113,13 +127,16 @@ Button_PLAY::~Button_PLAY(){
 }
 
 void
-Button_PLAY::draw(int posX, int posY){
+Button_PLAY::draw(int _posX, int _posY){
+    posX = _posX;
+    posY = _posY;
+    
     ofPushStyle();
     ofSetColor(bColor);
     ofFill();
     ofRect(posX, posY, width, height);
 
-    if(butState == ON) ofSetColor(fColorOff);
+    if(butState == ACTIVE) ofSetColor(fColorOff);
     else ofSetColor(fColorOn);
     ofTriangle(posX+5, posY+5, posX+10, posY+10, posX+5, posY+15);
     ofPopStyle();

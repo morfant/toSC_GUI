@@ -15,7 +15,7 @@ void testApp::setup(){
 //--------------------------------------------------------------
 void testApp::update(){
     textInput.getIsMouseOver();
-    pianoRoll.update();
+    aPianoRoll.update();
 
 }
 
@@ -31,8 +31,8 @@ void testApp::draw(){
     // TextInput
     textInput.draw();
     
-    // PianoRoll
-    pianoRoll.draw();
+    // aPianoRoll
+    aPianoRoll.draw();
     
 }
 
@@ -61,12 +61,12 @@ void testApp::keyPressed(int key){
     // PlayBar speed
     if (key == '{' && playSpeed >= 0) {
         playSpeed--;
-        pianoRoll.setPlaySpeed(playSpeed);
+        aPianoRoll.setPlaySpeed(playSpeed);
     }
 
     if (key == '}'&& playSpeed <= 100) {
         playSpeed++;
-        pianoRoll.setPlaySpeed(playSpeed);
+        aPianoRoll.setPlaySpeed(playSpeed);
     }
     
     
@@ -97,16 +97,16 @@ void testApp::keyPressed(int key){
     
     
     // keyMode
-    // 0 = normal, 1 = write, 2 = erase
-    if ('0' <= key && key <= '2') {
-        pianoRoll.setKeyMode(key);
-        if (key == '1') {
-            cout << "Write mode." << endl;
-        }else if(key == '2'){
-            cout << "Erase mode." << endl;
-        }else if(key == '0'){
-            cout << "Normal mode." << endl;
-        }
+    // '0' = normal, '1' = write, '2' = erase
+    if (key == WRITE) {
+        aPianoRoll.setKeyMode(WRITE);
+        cout << "Write mode." << endl;
+    }else if(key == ERASE){
+        aPianoRoll.setKeyMode(ERASE);
+        cout << "Erase mode." << endl;
+    }else if(key == NORMAL){
+        aPianoRoll.setKeyMode(NORMAL);
+        cout << "Normal mode." << endl;
     }
     
     // sendOSC
@@ -158,23 +158,32 @@ void testApp::mousePressed(int x, int y, int button){
     
     
     //func int blockAtMousePos();
-    switch (pianoRoll.getKeyMode()) {
-            cout<<pianoRoll.getKeyMode()<<endl;
+    switch (aPianoRoll.getKeyMode()) {
+            cout<<aPianoRoll.getKeyMode()<<endl;
         case '0':
             cout << "Set Write or Erase mode first." << endl;
             break; //normal
         case '1':
             cout << "writing block" << endl;
-            pianoRoll.makeBlock(x, y);
+            aPianoRoll.makeBlock(x, y);
             break; //write
         case '2':
             cout << "erasing block" << endl;
-            int delIdx = pianoRoll.blockAtMousePos(x, y);
+            int delIdx = aPianoRoll.blockAtMousePos(x, y);
             cout << "delIdx: " << delIdx << endl;
-            pianoRoll.eraseBlock(delIdx);
+            aPianoRoll.eraseBlock(delIdx);
             break; //erase
     }
     
+    //Buttons
+    if (aPianoRoll.getPlayButton()->isMouseOn(x, y)) {
+        cout << "Mouse is on playbutton" << endl;
+        if (aPianoRoll.getPlayButtonState() == DEACTIVE) {
+            aPianoRoll.setPlayButtonState(ACTIVE);
+        }else{
+            aPianoRoll.setPlayButtonState(DEACTIVE);
+        }
+    }
 }
 
 //--------------------------------------------------------------

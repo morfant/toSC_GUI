@@ -10,7 +10,7 @@
 #include <iostream>
 #include "ofMain.h"
 
-typedef enum { ON, OFF } BUT_STATE;
+typedef enum { ACTIVE, DEACTIVE } BUTTON_STATE;
 
 class Button{
 protected:
@@ -22,7 +22,9 @@ protected:
     ofColor fColorOn = ofColor(0);
     ofColor fColorOff = ofColor(0, 100, 50);
     
-    BUT_STATE butState = OFF;
+    BUTTON_STATE butState = DEACTIVE;
+    
+    bool bisMouseOn;
     
 public:
     
@@ -44,15 +46,16 @@ public:
     ofColor getFColorOn();
     ofColor getFColorOff();
     
-    void setState(BUT_STATE state);
-    BUT_STATE getState();
+    void setState(BUTTON_STATE state);
+    BUTTON_STATE getState();
     
+    bool isMouseOn(int mouseX,int mouseY);
     virtual void draw(int posX, int posY);
 };
 
 
 // Real Buttons
-class Button_PLAY : protected Button{
+class Button_PLAY : public Button{
 protected:
     
 public:

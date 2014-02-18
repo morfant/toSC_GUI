@@ -33,7 +33,7 @@ class testApp : public ofBaseApp {
 		ofxOscSender sender;
     
     MyTextInput textInput = MyTextInput(10, 100);
-    PianoRoll pianoRoll = PianoRoll(0,0);
+    PianoRoll aPianoRoll = PianoRoll(0,0);
     
     int playSpeed = 0;
 

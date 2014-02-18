@@ -14,14 +14,14 @@
 #include "Bar.h"
 #include "Button.h"
 
-//enum keyMode {
-//    NORMAL, WRITE, ERASE
-//};
+typedef enum { NORMAL = '0', WRITE, ERASE } MODE_STATE;
+//typedef enum { STOP, PLAYING } PLAYBUTTON_STATE;
 
 class PianoRoll{
 protected:
     
     int posX, posY;
+    int fposX, fposY;
     int backWidth, backHeight;
     int frontWidth, frontHeight;
     int teum;
@@ -29,20 +29,17 @@ protected:
     ofColor fBoxCol, fStrokeCol, bBoxCol, bStrokeCol;
     ofRectangle frontPanel, movingPanel;
     
-    bool isMouseOver;
-    
     vector<Block> blocks;
-    int keyMode = 0;
+    MODE_STATE keyMode = NORMAL;
     
     // Bar
     Bar playBar;
     int curPos;
-    int playSpeed = 0;
+    int playSpeed;
     
     // Buttons
     Button_PLAY playButton;
-    
-    
+    BUTTON_STATE pState = DEACTIVE;
     
 public:
     
@@ -63,16 +60,20 @@ public:
     void setY(int y);
     void setColor(ofColor boxCol, ofColor strokeCol);
     
-    bool getIsMouseOver();
-    
-    void setKeyMode(int mode);
-    int getKeyMode();
+    void setKeyMode(MODE_STATE mode);
+    MODE_STATE getKeyMode();
     
     void setPlaySpeed(int speedX);
     int getPlaySpeed();
     
-    bool isInRange(int specNum, int min, int max);
     int blockAtMousePos(int x, int y);
+    
+    Button_PLAY* getPlayButton();
+    void setPlayButtonState(BUTTON_STATE state);
+    BUTTON_STATE getPlayButtonState();
+    
+    
+    
     
     // update & draw
     void update();
