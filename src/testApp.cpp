@@ -113,11 +113,7 @@ void testApp::keyPressed(int key){
     
     // Playbutton
     if (key == 'p' || key == 'P'){
-        if (aPianoRoll.getPlayButtonState() == DEACTIVE) {
-            aPianoRoll.setPlayButtonState(ACTIVE);
-        }else{
-            aPianoRoll.setPlayButtonState(DEACTIVE);
-        }
+        aPianoRoll.playButtonAction();
     }
     
     // sendOSC
@@ -169,32 +165,40 @@ void testApp::mousePressed(int x, int y, int button){
     
     if(aPianoRoll.getMouseIsOnRollPanel(ofPoint(x, y))){
         switch (aPianoRoll.getKeyMode()) {
-                cout<<aPianoRoll.getKeyMode()<<endl;
-            case '0':
-                cout << "Set Write or Erase mode first." << endl;
+            case NORMAL:
+                cout << "Select block." << endl;
+                cout << "selected Idx: "
+                << aPianoRoll.blockAtMousePos(x, y) << endl;
+                aPianoRoll.selectBlock(aPianoRoll.blockAtMousePos(x, y));
+                if(aPianoRoll.blockAtMousePos(x, y) == -1){
+                    aPianoRoll.unSelectAllBlocks();
+                }
+                
                 break; //normal
-            case '1':
-                cout << "writing block" << endl;
+            case WRITE:
+                cout << "writing block: "
+                << aPianoRoll.getBlockNum() << endl;
                 aPianoRoll.makeBlock(x, y);
                 break; //write
-            case '2':
-                cout << "erasing block" << endl;
-                int delIdx = aPianoRoll.blockAtMousePos(x, y);
-                cout << "delIdx: " << delIdx << endl;
-                aPianoRoll.eraseBlock(delIdx);
+
+            case ERASE:
+                cout << "erasing block: "
+                << aPianoRoll.getBlockNum() << endl;
+                cout << "delIdx: "
+                << aPianoRoll.blockAtMousePos(x, y) << endl;
+                aPianoRoll.eraseBlock(aPianoRoll.blockAtMousePos(x, y));
                 break; //erase
+                
+            default:
+                break;
         }
     }
     
     //Buttons
     if (aPianoRoll.getPlayButton()->isMouseOn(x, y)) {
-//        cout << "Mouse is on playbutton" << endl;
-        if (aPianoRoll.getPlayButtonState() == DEACTIVE) {
-            aPianoRoll.setPlayButtonState(ACTIVE);
-        }else{
-            aPianoRoll.setPlayButtonState(DEACTIVE);
-        }
+        aPianoRoll.playButtonAction();
     }
+    
 }
 
 //--------------------------------------------------------------

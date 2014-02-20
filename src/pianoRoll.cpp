@@ -10,6 +10,13 @@
 
 PianoRoll::PianoRoll(int x, int y){
 
+//    //Test
+//    for(int i = 0; i < 10; i++){
+//        static int t = ofRandom(10);
+//        iVec.push_back(&t);
+//        cout<< "i : " << t << endl;
+//    }
+    
     posX = x;
     posY = y;
     teum = 11;
@@ -72,19 +79,53 @@ PianoRoll::getPlaySpeed(){
 // Blocks
 int
 PianoRoll::getBlockNum(){
-    return numOfBlock;
+    return numOfBlock = blocks.size();
+}
+
+void
+PianoRoll::selectBlock(int blockIdx){
+/*
+    // for vector
+    if(blocks.size() > 0 && blockIdx != -1){
+        if(blocks[blockIdx].getState() != SELECTED){
+            blocks[blockIdx].setState(SELECTED);
+        }
+    }
+ */
+    // for list
+    if(blocks.size() > 0 && blockIdx != -1){
+        iter = blocks.begin();
+        if(*(iter+blockIdx).getState() != SELECTED){
+            iter->setState(SELECTED);
+        }
+    }
+    
+}
+
+void
+PianoRoll::unSelectAllBlocks(){
+    if(blocks.size() > 0){
+//        for (vector<Block*>::iterator it = blocks.end() ; it != blocks.begin()-1; it--){
+//            (*it)->setState(NOT_SELECTED);
+//        }
+        for (size_t i = blocks.size()-1; i != -1; i--){
+            blocks[i].setState(NOT_SELECTED);
+        }
+    }
 }
 
 void
 PianoRoll::makeBlock(int x, int y){
+//    Block* aBlock = new Block(x, y);
     Block aBlock = Block(x, y);
+//    cout << "addr of block at make: " << aBlock << endl;
     blocks.push_back(aBlock);
 }
 
 void
-PianoRoll::eraseBlock(int blockNum){
-    if(blocks.size() > 0 && blockNum != -1){
-        blocks.erase(blocks.begin()+blockNum);
+PianoRoll::eraseBlock(int blockIdx){
+    if(blocks.size() > 0 && blockIdx != -1){
+        blocks.erase(blocks.begin()+blockIdx);
     }
 }
 
@@ -127,10 +168,10 @@ PianoRoll::setPlayButtonState(BUTTON_STATE state){
     playButton.setState(state);
 }
 
-BUTTON_STATE
-PianoRoll::getPlayButtonState(){
-    return playButton.getState();
-}
+//BUTTON_STATE
+//PianoRoll::getPlayButtonState(){
+//    return playButton.getState();
+//}
 
 
 // Control
@@ -144,10 +185,52 @@ PianoRoll::getMouseIsOnKeyPanel(ofPoint testPoint){
     return isInsideRect(testPoint, keyPanel);
 }
 
+// - sort blocks
+void
+PianoRoll::sortBlockPos(vector<Block> vecReal){
+//    ofSort(vec, sortCompare);
+//    cout << "addr of vec: " << &vec << endl;
+    ofSort(vecReal, sortCompare);
+}
+
+bool
+PianoRoll::sortCompare(Block a, Block b){
+    return (a.getBeginX() < b.getBeginX());
+}
+
+void
+PianoRoll::playButtonAction(){
+    if (pState == DEACTIVE){
+        
+//        // ofSort Test
+//        ofSort(iVec);
+//        for(size_t i = 0; i < iVec.size(); i++){
+//            cout << i << " : " << iVec[i] << endl;
+//        }
+        
+        
+        // SORT FIRST BLOCKS WITH BEGINX
+        sortBlockPos(blocks);
+        
+        for(size_t i = 0; i < blocks.size(); i++){
+            cout << i << " : " <<
+            blocks[i].getBeginX()
+            << endl;
+        }
+        
+        pState = ACTIVE;
+        playButton.setState(ACTIVE);
+    }
+    else{
+        pState = DEACTIVE;
+        playButton.setState(DEACTIVE);
+    }
+}
 
 void
 PianoRoll::drawBlocks(){
     if(blocks.size() > 0){
+//    cout << "addr of block at draw: " << &blocks[0] << endl;
         for (int i = blocks.size()-1; i >= 0; i--) {
             // Get block point and make some shape
             ofPushStyle();
@@ -164,7 +247,7 @@ PianoRoll::drawBlocks(){
 
 void
 PianoRoll::update(){
-    if(getPlayButtonState() == ACTIVE){
+    if(pState == ACTIVE){
         curPos = curPos + playSpeed;
         if(curPos >= ofGetWindowWidth()){
             curPos = rollPanelPosX;

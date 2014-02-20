@@ -15,7 +15,7 @@
 #include "Button.h"
 
 
-typedef enum { NORMAL = '0', WRITE, ERASE } MODE_STATE;
+typedef enum { NORMAL = '1', WRITE, ERASE } MODE_STATE;
 //typedef enum { STOP, PLAYING } PLAYBUTTON_STATE;
 
 class PianoRoll{
@@ -30,7 +30,11 @@ protected:
     ofColor fBoxCol, fStrokeCol, bBoxCol, bStrokeCol;
     ofRectangle keyPanel, rollPanel;
     
-    vector<Block> blocks;
+//    vector<Block> blocks;
+    list<Block> blocks;
+    list<Block>::iterator iter;
+    vector<int> selIdx;
+    
     MODE_STATE keyMode = NORMAL;
     
     // Bar
@@ -53,8 +57,11 @@ public:
     ~PianoRoll();
     
     // Block
+    void selectBlock(int blockIdx);
+    void unSelectAllBlocks();
+    
     void makeBlock(int x, int y);
-    void eraseBlock(int blockNum);
+    void eraseBlock(int blockIdx);
     void drawBlocks();
     int getBlockNum();
     
@@ -75,11 +82,16 @@ public:
     
     Button_PLAY* getPlayButton();
     void setPlayButtonState(BUTTON_STATE state);
-    BUTTON_STATE getPlayButtonState();
+//    BUTTON_STATE getPlayButtonState();
     
     // Control
     bool getMouseIsOnRollPanel(ofPoint testPoint);
     bool getMouseIsOnKeyPanel(ofPoint testPoint);
+    void sortBlockPos(vector<Block> vecReal);
+    static bool sortCompare(Block a, Block b);
+    void playButtonAction();
+
+    
     
     
     // update & draw

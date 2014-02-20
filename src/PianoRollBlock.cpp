@@ -14,13 +14,17 @@ Block::Block(int x, int y){
     
     width = 40;
     height = 10;
-    
-    blockColor = ofColor(50, 100, 20);
+
+    sel_blockColor = ofColor(250, 100, 20);
+    nsel_blockColor = ofColor(50, 100, 20);
     lineColor = ofColor(150, 10, 20);
+
+    state = NOT_SELECTED;
     
     freq = 0.f;
     amp = 0.f;
     env = 0.f;
+
 }
 
 
@@ -47,6 +51,10 @@ Block::getPos(){
     return ofPoint(beginX, beginY);
 }
 
+int
+Block::getBeginX(){
+    return beginX;
+}
 
 void
 Block::setWidth(int arg_width){
@@ -64,12 +72,23 @@ Block::getHeight(){
     return height;
 }
 
-// Color
-void
-Block::setBlockColor(ofColor arg_blockColor){
-    blockColor = arg_blockColor;
+BLOCK_STATE
+Block::getState(){
+    return state;
 }
 
+void
+Block::setState(BLOCK_STATE _state){
+    state = _state;
+}
+
+
+// Color
+void
+Block::setBlockColor(ofColor _selblockColor, ofColor _nselblockColor){
+    sel_blockColor = _selblockColor;
+    nsel_blockColor = _nselblockColor;
+}
 
 void
 Block::setLineColor(ofColor arg_lineColor){
@@ -78,7 +97,8 @@ Block::setLineColor(ofColor arg_lineColor){
 
 ofColor
 Block::getBlockColor(){
-    return blockColor;
+    return (state == SELECTED) ?
+    sel_blockColor : nsel_blockColor;
 }
 
 ofColor

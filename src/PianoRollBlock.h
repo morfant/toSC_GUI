@@ -10,6 +10,8 @@
 #include <iostream>
 #include "ofMain.h"
 
+typedef enum {SELECTED, NOT_SELECTED} BLOCK_STATE;
+
 class Block{
 
 protected:
@@ -18,8 +20,9 @@ protected:
     
     int width, height;
     
-    ofColor blockColor;
+    ofColor sel_blockColor, nsel_blockColor;
     ofColor lineColor;
+    BLOCK_STATE state;
     
     float freq, amp, env;
 
@@ -30,13 +33,16 @@ public:
     void setPos(int x, int y);
     void setPos(ofPoint pos);
     ofPoint getPos();
+    int getBeginX();
     
     void setWidth(int width);
     int getWidth();
     int getHeight();
+    BLOCK_STATE getState();
+    void setState(BLOCK_STATE _state);
     
     
-    void setBlockColor(ofColor arg_blockColor);
+    void setBlockColor(ofColor _selblockColor, ofColor _nselblockColor);
     void setLineColor(ofColor arg_lineColor);
     
     ofColor getBlockColor();
