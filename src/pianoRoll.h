@@ -30,9 +30,7 @@ protected:
     ofColor fBoxCol, fStrokeCol, bBoxCol, bStrokeCol;
     ofRectangle keyPanel, rollPanel;
     
-//    vector<Block> blocks;
-    list<Block> blocks;
-    list<Block>::iterator iter;
+    vector<Block*> blocks;
     vector<int> selIdx;
     
     MODE_STATE keyMode = NORMAL;
@@ -87,8 +85,7 @@ public:
     // Control
     bool getMouseIsOnRollPanel(ofPoint testPoint);
     bool getMouseIsOnKeyPanel(ofPoint testPoint);
-    void sortBlockPos(vector<Block> vecReal);
-    static bool sortCompare(Block a, Block b);
+    void sortBlockPos(vector<Block*>* vec);
     void playButtonAction();
 
     

@@ -84,14 +84,15 @@ PianoRoll::getBlockNum(){
 
 void
 PianoRoll::selectBlock(int blockIdx){
-/*
+
     // for vector
     if(blocks.size() > 0 && blockIdx != -1){
-        if(blocks[blockIdx].getState() != SELECTED){
-            blocks[blockIdx].setState(SELECTED);
+        if(blocks[blockIdx]->getState() != SELECTED){
+            blocks[blockIdx]->setState(SELECTED);
         }
     }
- */
+
+    /*
     // for list
     if(blocks.size() > 0 && blockIdx != -1){
         iter = blocks.begin();
@@ -99,7 +100,7 @@ PianoRoll::selectBlock(int blockIdx){
             iter->setState(SELECTED);
         }
     }
-    
+    */
 }
 
 void
@@ -109,15 +110,15 @@ PianoRoll::unSelectAllBlocks(){
 //            (*it)->setState(NOT_SELECTED);
 //        }
         for (size_t i = blocks.size()-1; i != -1; i--){
-            blocks[i].setState(NOT_SELECTED);
+            blocks[i]->setState(NOT_SELECTED);
         }
     }
 }
 
 void
 PianoRoll::makeBlock(int x, int y){
-//    Block* aBlock = new Block(x, y);
-    Block aBlock = Block(x, y);
+    Block* aBlock = new Block(x, y);
+//    Block aBlock = Block(x, y);
 //    cout << "addr of block at make: " << aBlock << endl;
     blocks.push_back(aBlock);
 }
@@ -134,10 +135,10 @@ PianoRoll::blockAtMousePos(int x, int y){
     if(blocks.size() > 0){
         for (int i = blocks.size()-1; i >= 0; i--) {
 
-            int posX = blocks[i].getPos().x;
-            int width = blocks[i].getWidth();
-            int posY = blocks[i].getPos().y;
-            int height = blocks[i].getHeight();
+            int posX = blocks[i]->getPos().x;
+            int width = blocks[i]->getWidth();
+            int posY = blocks[i]->getPos().y;
+            int height = blocks[i]->getHeight();
             
             ofRectangle tRect = ofRectangle(posX, posY, width, height);
             ofPoint tPoint = ofPoint(x, y);
@@ -187,36 +188,40 @@ PianoRoll::getMouseIsOnKeyPanel(ofPoint testPoint){
 
 // - sort blocks
 void
-PianoRoll::sortBlockPos(vector<Block> vecReal){
-//    ofSort(vec, sortCompare);
-//    cout << "addr of vec: " << &vec << endl;
-    ofSort(vecReal, sortCompare);
-}
+PianoRoll::sortBlockPos(vector<Block*>* vec){
+    
+    vector<Block*>::iterator iter = vec->begin();
 
-bool
-PianoRoll::sortCompare(Block a, Block b){
-    return (a.getBeginX() < b.getBeginX());
+    // access with vec[1] test
+//    cout <<
+//    (*(iter + 1))->getBeginX()
+//    << endl;
+    
+    size_t size = vec->size();
+    
+    for(int i = 1; i < size; i++){
+        // printf("%c\n", temp);
+        for(int j = i - 1; j >= 0; j--){
+            if((*(iter+j+1))->getBeginX() < (*(iter+j))->getBeginX()){
+//                cout << j+1 << " / " << j << endl;
+                swap((*(iter+j+1)), (*(iter+j)));
+            }
+        }
+    }
 }
 
 void
 PianoRoll::playButtonAction(){
     if (pState == DEACTIVE){
         
-//        // ofSort Test
-//        ofSort(iVec);
-//        for(size_t i = 0; i < iVec.size(); i++){
-//            cout << i << " : " << iVec[i] << endl;
-//        }
-        
-        
         // SORT FIRST BLOCKS WITH BEGINX
-        sortBlockPos(blocks);
+        sortBlockPos(&blocks);
         
-        for(size_t i = 0; i < blocks.size(); i++){
-            cout << i << " : " <<
-            blocks[i].getBeginX()
-            << endl;
-        }
+//        for(size_t i = 0; i < blocks.size(); i++){
+//            cout << i << " : " <<
+//            blocks[i]->getBeginX()
+//            << endl;
+//        }
         
         pState = ACTIVE;
         playButton.setState(ACTIVE);
@@ -235,11 +240,11 @@ PianoRoll::drawBlocks(){
             // Get block point and make some shape
             ofPushStyle();
             ofFill();
-            ofSetColor(blocks[i].getBlockColor());
-            ofRect(blocks[i].getPos(), blocks[i].getWidth(), blocks[i].getHeight());
+            ofSetColor(blocks[i]->getBlockColor());
+            ofRect(blocks[i]->getPos(), blocks[i]->getWidth(), blocks[i]->getHeight());
             ofNoFill();
-            ofSetColor(blocks[i].getLineColor());
-            ofRect(blocks[i].getPos(), blocks[i].getWidth(), blocks[i].getHeight());
+            ofSetColor(blocks[i]->getLineColor());
+            ofRect(blocks[i]->getPos(), blocks[i]->getWidth(), blocks[i]->getHeight());
             ofPopStyle();
         }
     }
