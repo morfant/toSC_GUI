@@ -10,16 +10,19 @@
 
 #include <iostream>
 #include "ofMain.h"
+#include "Functions.h"
 
+typedef enum {FORCUS, NOT_FORCUS} MODE_FORCUS;
 
 class MyTextInput{
 protected:
     
     int posX, posY;
     int width, height;
-    ofColor boxCol, strokeCol;
+    ofRectangle textPanel;
+    ofColor sel_boxCol, nsel_boxCol, strokeCol;
 
-    bool isMouseOver;
+    MODE_FORCUS isForcus;
 
     string text;
     
@@ -32,7 +35,7 @@ protected:
 public:
     
     // constructor & destructor
-    MyTextInput(int x, int y);
+    MyTextInput(int x, int y, int width, int height);
     ~MyTextInput();
     
     
@@ -41,8 +44,12 @@ public:
     int getY();
     void setX(int x);
     void setY(int y);
-    void setColor(ofColor boxCol, ofColor strokeCol);
-    bool getIsMouseOver();
+    void setColor(ofColor sel_bc, ofColor nsel_bc, ofColor sc);
+    
+    bool getIsMouseOver(ofPoint testPoint);
+    void setFocus(MODE_FORCUS fState);
+    MODE_FORCUS getFocus();
+    
     int getTextPos();
     void setTextPos(int x);
     int getCursorPos();
@@ -54,6 +61,6 @@ public:
     void draw();
     
     
-    void isFocus(int x, int y);
+    
     
 };

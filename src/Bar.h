@@ -14,8 +14,7 @@ class Bar{
 
 protected:
     int posX;
-    ofColor color;
-    
+    ofColor color;    
     
 public:
     Bar();

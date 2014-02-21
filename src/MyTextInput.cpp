@@ -8,16 +8,24 @@
 
 #include "MyTextInput.h"
 
-MyTextInput::MyTextInput(int x, int y){
+MyTextInput::MyTextInput(int x, int y, int w, int h){
     text = "";
+    
     posX = x;
     posY = y;
-    width = 100;
-    height = 20;
-    boxCol = ofColor(255);
+    width = w;
+    height = h;
+    textPanel = ofRectangle(x, y, width, height);
+    
+    isForcus = NOT_FORCUS;
+    
+    sel_boxCol = ofColor(255);
+    nsel_boxCol = ofColor(0, 100, 200);
     strokeCol = ofColor(0);
+    
     fontHeight = 15;
     fontWidth = 8;
+    
     cursorThickness = 2;
     
 }
@@ -49,59 +57,26 @@ MyTextInput::setY(int y){
 }
 
 void
-MyTextInput::setColor(ofColor boxC, ofColor strokeC){
-    boxCol = boxC;
-    strokeCol = strokeC;
-}
-
-
-void
-MyTextInput::update(){
-
+MyTextInput::setColor(ofColor sel_bc, ofColor nsel_bc, ofColor sc){
+    sel_boxCol = sel_bc;
+    nsel_boxCol = nsel_bc;
+    strokeCol = sc;
 }
 
 void
-MyTextInput::draw(){
-    
-    ofPushStyle();
-//    ofFill();
-    ofNoFill();
-    ofSetColor(boxCol);
-    ofRect(posX, posY, width, height);
-    ofPopStyle();
-    
-    ofPushMatrix();
-    ofTranslate(posX, posY);
-
-    // cursor
-    ofPushStyle();
-    ofSetColor(255, 0, 0, 255);
-    cursorX = textPos * fontWidth;
-    ofLine(5 + cursorX, height - fontHeight, 5 + cursorX, fontHeight);
-    ofPopStyle();
-    
-    ofDrawBitmapString(text, 5, fontHeight);
-    ofPopMatrix();
+MyTextInput::setFocus(MODE_FORCUS fState){
+    isForcus = fState;
+    cout << isForcus << endl;
 }
 
-
-void
-MyTextInput::isFocus(int x, int y){
-
-    if(x >= posX && x <= (posX + width) && y >= posY && y <= (posY + height)){
-        cout << "ooo" << endl;
-        isMouseOver = true;
-        setColor(ofColor(255, 0, 0, 90), ofColor(255));
-    }else{
-        isMouseOver = false;
-        setColor(ofColor(255), ofColor(0));
-    }
+MODE_FORCUS
+MyTextInput::getFocus(){
+    return isForcus;
 }
-
 
 bool
-MyTextInput::getIsMouseOver(){
-    return isMouseOver;
+MyTextInput::getIsMouseOver(ofPoint testPoint){
+    return isInsideRect(testPoint, textPanel);
 }
 
 int
@@ -123,5 +98,44 @@ string*
 MyTextInput::getText(){
     return &text;
 }
+
+
+
+//----------------LOOP----------------
+void
+MyTextInput::update(){
+    
+}
+
+void
+MyTextInput::draw(){
+    
+    ofPushStyle();
+    //    ofFill();
+    ofNoFill();
+    
+    if(isForcus == FORCUS){
+        ofSetColor(sel_boxCol);
+    }else{
+        ofSetColor(nsel_boxCol);
+    }
+    
+    ofRect(posX, posY, width, height);
+    ofPopStyle();
+    
+    ofPushMatrix();
+    ofTranslate(posX, posY);
+    
+    // cursor
+    ofPushStyle();
+    ofSetColor(255, 0, 0, 255);
+    cursorX = textPos * fontWidth;
+    ofLine(5 + cursorX, height - fontHeight, 5 + cursorX, fontHeight);
+    ofPopStyle();
+    
+    ofDrawBitmapString(text, 5, fontHeight);
+    ofPopMatrix();
+}
+
 
 

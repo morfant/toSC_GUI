@@ -10,13 +10,6 @@
 
 PianoRoll::PianoRoll(int x, int y){
 
-//    //Test
-//    for(int i = 0; i < 10; i++){
-//        static int t = ofRandom(10);
-//        iVec.push_back(&t);
-//        cout<< "i : " << t << endl;
-//    }
-    
     posX = x;
     posY = y;
     teum = 11;
@@ -40,11 +33,14 @@ PianoRoll::PianoRoll(int x, int y){
     
     // Blocks
     numOfBlock = 0;
+    lastBlockNum = 0;
     
     // Bar
     playSpeed = 2;
     curPos = rollPanelPosX;
     playBar = Bar(curPos);
+    atEnd = FALSE;
+    triggered = FALSE;
     
     // Buttons
     pState = DEACTIVE;
@@ -191,12 +187,6 @@ void
 PianoRoll::sortBlockPos(vector<Block*>* vec){
     
     vector<Block*>::iterator iter = vec->begin();
-
-    // access with vec[1] test
-//    cout <<
-//    (*(iter + 1))->getBeginX()
-//    << endl;
-    
     size_t size = vec->size();
     
     for(int i = 1; i < size; i++){
@@ -213,8 +203,6 @@ PianoRoll::sortBlockPos(vector<Block*>* vec){
 void
 PianoRoll::playButtonAction(){
     if (pState == DEACTIVE){
-        
-        // SORT FIRST BLOCKS WITH BEGINX
         sortBlockPos(&blocks);
         
 //        for(size_t i = 0; i < blocks.size(); i++){
@@ -229,6 +217,35 @@ PianoRoll::playButtonAction(){
     else{
         pState = DEACTIVE;
         playButton.setState(DEACTIVE);
+    }
+}
+
+void
+PianoRoll::isHit(){
+        if (curPos >= blocks[lastBlockNum]->getBeginX()) {
+            cout << "send osc to SC!" << endl;
+            ++lastBlockNum;
+        }
+        if (atEnd == TRUE) {
+            lastBlockNum = 0;
+        }
+}
+
+void
+PianoRoll::setCurPos(int pos){
+    curPos = pos;
+}
+
+void
+PianoRoll::findLastBlockNum(int barPos){
+    size_t size = blocks.size();
+
+    for (int i = 0; i != size; ++i) {
+        if (barPos > (blocks[i]->getBeginX()) &&
+            barPos < (blocks[i+1]->getBeginX())) {
+            lastBlockNum = i + 1;
+            break;
+        }
     }
 }
 
@@ -250,14 +267,34 @@ PianoRoll::drawBlocks(){
     }
 }
 
+
+// loop
 void
 PianoRoll::update(){
+//    isHit();
+    playBar.setPos(curPos);
+    
     if(pState == ACTIVE){
+        
+        if (lastBlockNum != -1) {
+            if (curPos >= blocks[lastBlockNum]->getBeginX()) {
+                cout << "send osc to SC!" << endl;
+//                sendOSC("/test", *text);                
+                cout << lastBlockNum << endl;
+                if(lastBlockNum < (blocks.size() - 1)){
+                    ++lastBlockNum;
+                }else{
+                    lastBlockNum = -1;
+                }
+            }
+        }
+        
         curPos = curPos + playSpeed;
         if(curPos >= ofGetWindowWidth()){
             curPos = rollPanelPosX;
+            atEnd = TRUE;
+            lastBlockNum = 0;
         }
-        playBar.setPos(curPos);
     }
 }
 

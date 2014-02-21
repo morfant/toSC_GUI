@@ -8,25 +8,22 @@ void testApp::setup(){
 	// open an outgoing connection to HOST:PORT
 	sender.setup(HOST, PORT);
     
-    
+    textInput = new MyTextInput(10, 100, 250, 100);
+    aPianoRoll = new PianoRoll(0, 0);
     // TextInput
 }
 
 //--------------------------------------------------------------
 void testApp::update(){
-    textInput.getIsMouseOver();
-    aPianoRoll.update();
-
+    textInput->update();
+    aPianoRoll->update();
 }
 
 //--------------------------------------------------------------
 void testApp::draw(){
     
-    // TextInput
-    textInput.draw();
-    
-    // aPianoRoll
-    aPianoRoll.draw();
+    aPianoRoll->draw();
+    textInput->draw();
     
 	// display instructions
 	string buf;
@@ -49,77 +46,82 @@ void testApp::sendOSC(string destAddr, string cmd){
 //--------------------------------------------------------------
 void testApp::keyPressed(int key){
     
-//    cout << key << endl;
+//------------TEXT INPUT------------
+    if(textInput->getFocus() == FORCUS){
+        string* text = textInput->getText();
+        int textPos = textInput->getTextPos();
         
-    string* text = textInput.getText();
-    int textPos = textInput.getTextPos();
-    
-    if (key >=32 && key <=126) {
-        text->insert(text->begin() + textPos, key);
-        textInput.setTextPos(textPos + 1);
-//        cout << *(textInput.getText()) << endl;
+        if (key >=32 && key <=126) {
+            text->insert(text->begin() + textPos, key);
+            textInput->setTextPos(textPos + 1);
+    //        cout << *(textInput.getText()) << endl;
+        }
+        
+        if (key==OF_KEY_BACKSPACE){
+            if (textPos>0){
+                text->erase(text->begin() + textPos - 1);
+                textInput->setTextPos(textPos - 1);
+            }
+        }
+        
+        if (key==OF_KEY_DEL){
+            if (text->size() > textPos){
+                text->erase(text->begin() + textPos);
+            }
+        }
+        
+        if (key==OF_KEY_LEFT){
+            if (textPos>0){
+                textInput->setTextPos(textPos - 1);
+            }
+        }
+        
+        if (key==OF_KEY_RIGHT){
+            if (textPos < text->size()){
+                textInput->setTextPos(textPos + 1);
+            }
+        }
+        
+        
+        // sendOSC
+        if (key==OF_KEY_RETURN) {
+            sendOSC("/test", *text);
+        }
+        
     }
     
+    
+//------------PIANO ROLL------------
     // PlayBar speed
-    if (key == '{' && playSpeed >= 0) {
+    if (key == '{' && playSpeed > 0) {
         playSpeed--;
-        aPianoRoll.setPlaySpeed(playSpeed);
+        aPianoRoll->setPlaySpeed(playSpeed);
     }
 
-    if (key == '}'&& playSpeed <= 100) {
+    if (key == '}'&& playSpeed < 100) {
         playSpeed++;
-        aPianoRoll.setPlaySpeed(playSpeed);
-    }
-    
-    
-    if (key==OF_KEY_BACKSPACE){
-        if (textPos>0){
-            text->erase(text->begin() + textPos - 1);
-            textInput.setTextPos(textPos - 1);
-        }
-    }
-    
-    if (key==OF_KEY_DEL){
-        if (text->size() > textPos){
-            text->erase(text->begin() + textPos);
-        }
-    }
-    
-    if (key==OF_KEY_LEFT){
-        if (textPos>0){
-            textInput.setTextPos(textPos - 1);
-        }
-    }
-    
-    if (key==OF_KEY_RIGHT){
-        if (textPos < text->size()){
-            textInput.setTextPos(textPos + 1);
-        }
+        aPianoRoll->setPlaySpeed(playSpeed);
     }
     
     
     // keyMode
     // '0' = normal, '1' = write, '2' = erase
     if (key == WRITE) {
-        aPianoRoll.setKeyMode(WRITE);
+        aPianoRoll->setKeyMode(WRITE);
         cout << "Write mode." << endl;
     }else if(key == ERASE){
-        aPianoRoll.setKeyMode(ERASE);
+        aPianoRoll->setKeyMode(ERASE);
         cout << "Erase mode." << endl;
     }else if(key == NORMAL){
-        aPianoRoll.setKeyMode(NORMAL);
+        aPianoRoll->setKeyMode(NORMAL);
         cout << "Normal mode." << endl;
     }
     
     // Playbutton
     if (key == 'p' || key == 'P'){
-        aPianoRoll.playButtonAction();
+        aPianoRoll->playButtonAction();
     }
     
-    // sendOSC
-    if (key==OF_KEY_RETURN) {
-        sendOSC("/test", *text);
-    }
     
     
     //for multiline:
@@ -155,48 +157,59 @@ void testApp::mouseDragged(int x, int y, int button){
 
 //--------------------------------------------------------------
 void testApp::mousePressed(int x, int y, int button){
-    
-    textInput.isFocus(x, y);
+
+    if(textInput->getIsMouseOver(ofPoint(x, y))){
+        textInput->setFocus(FORCUS);
+    }else{
+        textInput->setFocus(NOT_FORCUS);
+    }
     
 	ofxOscMessage m;
 	m.setAddress("/mouse/button");
 	m.addStringArg("down");
 	sender.sendMessage(m);
     
-    if(aPianoRoll.getMouseIsOnRollPanel(ofPoint(x, y))){
-        switch (aPianoRoll.getKeyMode()) {
-            case NORMAL:
-                cout << "Select block." << endl;
-                cout << "selected Idx: "
-                << aPianoRoll.blockAtMousePos(x, y) << endl;
-                aPianoRoll.selectBlock(aPianoRoll.blockAtMousePos(x, y));
-                if(aPianoRoll.blockAtMousePos(x, y) == -1){
-                    aPianoRoll.unSelectAllBlocks();
-                }
+    if(aPianoRoll->getMouseIsOnRollPanel(ofPoint(x, y))){
+        switch (aPianoRoll->getKeyMode()) {
+        case NORMAL:
+            cout << "Select block." << endl;
+            cout << "selected Idx: "
+            << aPianoRoll->blockAtMousePos(x, y) << endl;
                 
-                break; //normal
-            case WRITE:
-                cout << "writing block: "
-                << aPianoRoll.getBlockNum() << endl;
-                aPianoRoll.makeBlock(x, y);
-                break; //write
+            aPianoRoll->selectBlock(aPianoRoll->blockAtMousePos(x, y));
+            if(aPianoRoll->blockAtMousePos(x, y) == -1){
+                aPianoRoll->unSelectAllBlocks();
+                aPianoRoll->setCurPos(x);
+                aPianoRoll->findLastBlockNum(x);
+            }else if(aPianoRoll->blockAtMousePos(x, y) == -2){
+                aPianoRoll->setCurPos(x);
+                aPianoRoll->findLastBlockNum(x);
+            }
+            
+            
+            break; //normal
+        case WRITE:
+            cout << "writing block: "
+            << aPianoRoll->getBlockNum() << endl;
+            aPianoRoll->makeBlock(x, y);
+            break; //write
 
-            case ERASE:
-                cout << "erasing block: "
-                << aPianoRoll.getBlockNum() << endl;
-                cout << "delIdx: "
-                << aPianoRoll.blockAtMousePos(x, y) << endl;
-                aPianoRoll.eraseBlock(aPianoRoll.blockAtMousePos(x, y));
-                break; //erase
-                
-            default:
-                break;
+        case ERASE:
+            cout << "erasing block: "
+            << aPianoRoll->getBlockNum() << endl;
+            cout << "delIdx: "
+            << aPianoRoll->blockAtMousePos(x, y) << endl;
+            aPianoRoll->eraseBlock(aPianoRoll->blockAtMousePos(x, y));
+            break; //erase
+            
+        default:
+            break;
         }
     }
     
     //Buttons
-    if (aPianoRoll.getPlayButton()->isMouseOn(x, y)) {
-        aPianoRoll.playButtonAction();
+    if (aPianoRoll->getPlayButton()->isMouseOn(x, y)) {
+        aPianoRoll->playButtonAction();
     }
     
 }

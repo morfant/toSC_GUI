@@ -21,32 +21,38 @@ typedef enum { NORMAL = '1', WRITE, ERASE } MODE_STATE;
 class PianoRoll{
 protected:
     
-    int posX, posY;
-    int rollPanelPosX, rollPanelPosY;
-    int rollPanelWidth, rollPanelHeight;
-    int keyPanelWidth, keyPanelHeight;
-    int teum;
-    int numOfBlock = 0;
-    ofColor fBoxCol, fStrokeCol, bBoxCol, bStrokeCol;
-    ofRectangle keyPanel, rollPanel;
+    int             posX, posY;
+    int             rollPanelPosX, rollPanelPosY;
+    int             rollPanelWidth, rollPanelHeight;
+    int             keyPanelWidth, keyPanelHeight;
+    int             teum;
+    int             numOfBlock = 0;
+    ofColor         fBoxCol, fStrokeCol, bBoxCol, bStrokeCol;
+    ofRectangle     keyPanel, rollPanel;
     
-    vector<Block*> blocks;
-    vector<int> selIdx;
+    vector<Block*>  blocks;
+    vector<int>     selIdx;
     
-    MODE_STATE keyMode = NORMAL;
+    MODE_STATE      keyMode = NORMAL;
     
     // Bar
-    Bar playBar;
-    int curPos;
-    int playSpeed;
+    Bar             playBar;
+    int             curPos;
+    int             playSpeed;
+    bool            atEnd;
     
     // Buttons
-    Button_PLAY playButton;
-    BUTTON_STATE pState = DEACTIVE;
+    Button_PLAY     playButton;
+    BUTTON_STATE    pState = DEACTIVE;
     
     // Control
-    bool isOnRollPanel;
-    bool isOnKeyPanel;
+    bool            isOnRollPanel;
+    bool            isOnKeyPanel;
+    int             lastBlockNum;
+    bool            triggered;
+
+    
+
     
 public:
     
@@ -87,9 +93,10 @@ public:
     bool getMouseIsOnKeyPanel(ofPoint testPoint);
     void sortBlockPos(vector<Block*>* vec);
     void playButtonAction();
+    void isHit();
+    void setCurPos(int pos);
+    void findLastBlockNum(int x);
 
-    
-    
     
     // update & draw
     void update();

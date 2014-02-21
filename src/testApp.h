@@ -32,8 +32,8 @@ class testApp : public ofBaseApp {
 		ofTrueTypeFont font;
 		ofxOscSender sender;
     
-    MyTextInput textInput = MyTextInput(10, 100);
-    PianoRoll aPianoRoll = PianoRoll(0,0);
+    MyTextInput* textInput;
+    PianoRoll* aPianoRoll;
     
     int playSpeed = 0;
 
