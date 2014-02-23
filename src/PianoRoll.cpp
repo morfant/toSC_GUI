@@ -8,10 +8,10 @@
 
 #include "pianoRoll.h"
 
-PianoRoll::PianoRoll(int x, int y){
+PianoRoll::PianoRoll(){
 
-    posX = x;
-    posY = y;
+    posX = 0;
+    posY = 0;
     teum = 11;
     keyPanelWidth = 300;
     
@@ -21,8 +21,8 @@ PianoRoll::PianoRoll(int x, int y){
     rollPanelPosX = ofGetWindowWidth() - rollPanelWidth;
     rollPanelPosY = 0;
     
-    rollPanel = ofRectangle(x + teum + keyPanelWidth, y, rollPanelWidth, rollPanelHeight);
-    keyPanel = ofRectangle(x, y, keyPanelWidth, keyPanelHeight);
+    rollPanel = ofRectangle(posX + teum + keyPanelWidth, posY, rollPanelWidth, rollPanelHeight);
+    keyPanel = ofRectangle(posX, posY, keyPanelWidth, keyPanelHeight);
     
 
     fBoxCol = ofColor(255, 0, 0);
@@ -49,6 +49,15 @@ PianoRoll::PianoRoll(int x, int y){
 PianoRoll::~PianoRoll(){
     
 }
+
+
+void
+PianoRoll::init(){
+    // Don't forget to use "ofEvents()".
+	ofAddListener(ofEvents().keyPressed, this, &PianoRoll::keyPressedEvent);
+	ofAddListener(ofEvents().mousePressed, this, &PianoRoll::mousePressedEvent);
+}
+
 
 void
 PianoRoll::setKeyMode(MODE_STATE mode){
@@ -276,7 +285,7 @@ PianoRoll::update(){
     
     if(pState == ACTIVE){
         
-        if (lastBlockNum != -1) {
+        if (lastBlockNum != -1 && blocks.size() != 0) {
             if (curPos >= blocks[lastBlockNum]->getBeginX()) {
                 cout << "send osc to SC!" << endl;
 //                sendOSC("/test", *text);                
@@ -331,6 +340,96 @@ PianoRoll::draw(){
 
 
 
+//----------------Key event----------------
+void
+PianoRoll::keyPressedEvent(ofKeyEventArgs &a) {
+	keyPressed(a.key);
+}
+
+void
+PianoRoll::keyPressed(int key) {
+    
+    // PlayBar speed
+    if (key == '{' && playSpeed > 0) {
+        playSpeed--;
+    }
+    
+    if (key == '}'&& playSpeed < 100) {
+        playSpeed++;
+    }
+    
+    // keyMode
+    // '0' = normal, '1' = write, '2' = erase
+    if (key == WRITE) {
+        setKeyMode(WRITE);
+        cout << "Write mode." << endl;
+    }else if(key == ERASE){
+        setKeyMode(ERASE);
+        cout << "Erase mode." << endl;
+    }else if(key == NORMAL){
+        setKeyMode(NORMAL);
+        cout << "Normal mode." << endl;
+    }
+    
+    // Playbutton
+    if (key == 'p' || key == 'P'){
+        playButtonAction();
+    }
+}
+
+
+//----------------Mouse event----------------
+void
+PianoRoll::mousePressedEvent(ofMouseEventArgs &m){
+    mousePressed(m.x, m.y, m.button);
+}
+
+void
+PianoRoll::mousePressed(int x, int y, int button){
+    
+    if(getMouseIsOnRollPanel(ofPoint(x, y))){
+        switch (getKeyMode()) {
+            case NORMAL:
+                cout << "Select block." << endl;
+                cout << "selected Idx: "
+                << blockAtMousePos(x, y) << endl;
+                
+                selectBlock(blockAtMousePos(x, y));
+                if(blockAtMousePos(x, y) == -1){
+                    unSelectAllBlocks();
+                    setCurPos(x);
+                    findLastBlockNum(x);
+                }else if(blockAtMousePos(x, y) == -2){
+                    setCurPos(x);
+                    findLastBlockNum(x);
+                }
+                
+                
+                break; //normal
+            case WRITE:
+                cout << "writing block: "
+                << getBlockNum() << endl;
+                makeBlock(x, y);
+                break; //write
+                
+            case ERASE:
+                cout << "erasing block: "
+                << getBlockNum() << endl;
+                cout << "delIdx: "
+                << blockAtMousePos(x, y) << endl;
+                eraseBlock(blockAtMousePos(x, y));
+                break; //erase
+                
+            default:
+                break;
+        }
+    }
+    
+    //Buttons
+    if (getPlayButton()->isMouseOn(x, y)) {
+        playButtonAction();
+    }
+}
 
 
 

@@ -10,6 +10,7 @@
 
 #include <iostream>
 #include "ofMain.h"
+#include "ofEvents.h"
 #include "PianoRollBlock.h"
 #include "Bar.h"
 #include "Button.h"
@@ -57,8 +58,10 @@ protected:
 public:
     
     // constructor & destructor
-    PianoRoll(int x, int y);
+    PianoRoll();
     ~PianoRoll();
+    
+    void init();
     
     // Block
     void selectBlock(int blockIdx);
@@ -89,6 +92,11 @@ public:
 //    BUTTON_STATE getPlayButtonState();
     
     // Control
+    void	keyPressed(int key);
+	void	keyPressedEvent(ofKeyEventArgs &a);
+    void mousePressedEvent(ofMouseEventArgs &m);
+    void mousePressed(int x, int y, int button);
+    
     bool getMouseIsOnRollPanel(ofPoint testPoint);
     bool getMouseIsOnKeyPanel(ofPoint testPoint);
     void sortBlockPos(vector<Block*>* vec);

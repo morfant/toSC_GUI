@@ -1,12 +1,10 @@
 #pragma once
 
 #include "ofMain.h"
-#include "ofxOsc.h"
-#include "MyTextInput.h"
-#include "pianoRoll.h"
-
-#define HOST "localhost"
-#define PORT 57120
+//#include "ofxOsc.h"
+#include "Track.h"
+//#include "TextInput.h"
+//#include "pianoRoll.h"
 
 //--------------------------------------------------------
 class testApp : public ofBaseApp {
@@ -27,13 +25,12 @@ class testApp : public ofBaseApp {
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
     
-    void sendOSC(string destAddr, string cmd);
-
 		ofTrueTypeFont font;
-		ofxOscSender sender;
     
-    MyTextInput* textInput;
-    PianoRoll* aPianoRoll;
+//    TextInput* textInput;
+//    PianoRoll* aPianoRoll;
+    
+    Track* pTrack; // Manage PianoRoll, TextInput and OSC
     
     int playSpeed = 0;
 
