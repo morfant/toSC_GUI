@@ -73,10 +73,10 @@ public:
     int getBlockNum();
     
     // getter & setter
-    int getX();
-    int getY();
-    void setX(int x);
-    void setY(int y);
+    int getPosX();
+    int getPosY();
+    void setPosX(int x);
+    void setPosY(int y);
     void setColor(ofColor boxCol, ofColor strokeCol);
     
     void setKeyMode(MODE_STATE mode);

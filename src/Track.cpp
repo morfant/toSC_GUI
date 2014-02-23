@@ -11,7 +11,9 @@
 Track::Track(){
     
     pPianoRoll = new PianoRoll();
-    pTextInput = new TextInput(10, 10);
+    pTextInput = new TextInput(
+        pPianoRoll->getPosX(),
+        pPianoRoll->getPosY());
     pPianoRoll->init();
     pTextInput->init();
     

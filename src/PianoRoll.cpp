@@ -58,6 +58,27 @@ PianoRoll::init(){
 	ofAddListener(ofEvents().mousePressed, this, &PianoRoll::mousePressedEvent);
 }
 
+// POSITION
+int
+PianoRoll::getPosX(){
+    return posX;
+}
+
+int
+PianoRoll::getPosY(){
+    return posY;
+}
+
+void
+PianoRoll::setPosX(int x){
+    posX = x;
+}
+
+void
+PianoRoll::setPosY(int y){
+    posY = y;
+}
+
 
 void
 PianoRoll::setKeyMode(MODE_STATE mode){

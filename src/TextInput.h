@@ -28,7 +28,7 @@ protected:
     int height = 100;
     
     ofRectangle textPanel;
-    ofColor sel_boxCol, nsel_boxCol, strokeCol;
+    ofColor sel_boxCol, nsel_boxCol, strokeCol, txtCol;
 
     MODE_FORCUS isForcus = NOT_FORCUS;
 
@@ -41,9 +41,13 @@ protected:
     float fontHeight = 13.55f;
     int fontWidth = 8;
     
+    int cursorX = 0;
     int textPos = 0;
     int lineNum = 0;
     int posInLine = 0;
+    int linePos = 0;
+    int bottomOver = 0;
+    int lineLimit = 100;
     vector<int> cNumOfLines;
 
 
@@ -77,6 +81,14 @@ public:
 	void	keyPressedEvent(ofKeyEventArgs &a);
     void    mousePressed(int x, int y, int button);
     void    mousePressedEvent(ofMouseEventArgs &m);
+    
+    int     getCharNumOfLine(int lineNum, string text);
+    void    viewStringInChar(string text);
+    void    keyUP();
+    void    keyDOWN();
+    void    keyLEFT();
+    void    keyRIGHT();
+    
     
     
     // update & draw
