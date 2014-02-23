@@ -83,11 +83,16 @@ public:
     void    mousePressedEvent(ofMouseEventArgs &m);
     
     int     getCharNumOfLine(int lineNum, string text);
+    int     getFirstPos(int lineNum, string text);
     void    viewStringInChar(string text);
     void    keyUP();
     void    keyDOWN();
     void    keyLEFT();
     void    keyRIGHT();
+    void    keyRETURN();
+    void    keyBACKSPACE();
+    void    keyDEL();
+    
     
     
     
