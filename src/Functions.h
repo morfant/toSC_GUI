@@ -15,3 +15,5 @@ bool isInsideRect(ofPoint testPoint, ofPoint leftTop, int width, int height);
 bool isInsideRect(int x, int y, int left, int top, int width, int height);
 bool isInsideRect(int x, int y, ofRectangle rect);
 bool isInsideRect(ofPoint point, ofRectangle rect);
+
+int sum(int idx, vector<int>* arr);

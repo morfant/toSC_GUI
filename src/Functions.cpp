@@ -47,3 +47,13 @@ isInsideRect(ofPoint point, ofRectangle rect){
 }
 
 
+int
+sum(int targetIdx, vector<int>* arr){
+    int sumRslt = 0;
+    vector<int>::iterator it = arr->begin();
+    
+    for (size_t i = 0; i <= targetIdx; ++i) {
+        sumRslt += *(it + i);
+    }
+    return sumRslt;
+}

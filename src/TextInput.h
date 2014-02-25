@@ -18,7 +18,18 @@
 #define PORT 57120
 
 
-typedef enum {FORCUS, NOT_FORCUS} MODE_FORCUS;
+typedef enum {
+    FORCUS, NOT_FORCUS
+} MODE_FORCUS;
+
+typedef enum {
+    NONE, ROUND_BRACKET, SQUARE_BRACKET, BRACE
+} TYPE_BRACKET;
+
+typedef struct {
+    int pos;
+    TYPE_BRACKET bracketType = NONE;
+} BRACKET;
 
 class TextInput{
 protected:
@@ -28,7 +39,8 @@ protected:
     int height = 100;
     
     ofRectangle textPanel;
-    ofColor sel_boxCol, nsel_boxCol, strokeCol, txtCol;
+    ofColor sel_boxCol, nsel_boxCol, strokeCol, txtCol,
+            bgBlockCol, bgBlockCol_warn;
 
     MODE_FORCUS isForcus = NOT_FORCUS;
 
@@ -49,6 +61,9 @@ protected:
     int bottomOver = 0;
     int lineLimit = 100;
     vector<int> cNumOfLines;
+    
+    int blockBegin = 0;
+    int blockEnd = 0;
 
 
     
@@ -67,7 +82,8 @@ public:
     int     getY();
     void    setX(int x);
     void    setY(int y);
-    void    setColor(ofColor sel_bc, ofColor nsel_bc, ofColor sc);
+    void    setColor(
+            ofColor sel_bc, ofColor nsel_bc, ofColor sc);
     
     bool    getIsMouseOver(ofPoint testPoint);
     void    setFocus(MODE_FORCUS fState);
@@ -85,6 +101,14 @@ public:
     int     getCharNumOfLine(int lineNum, string text);
     int     getFirstPos(int lineNum, string text);
     void    viewStringInChar(string text);
+    bool    chkBracketsOpen(int key);
+    bool    chkBracketsClose(int key);
+    int    isSameShapeBracket();
+    vector<BRACKET> openBrackets;
+    vector<BRACKET> closeBrackets;
+    int     nTab = 0;
+    bool    nTabBool = false;
+    void    insertIndention(int nTab);
     void    keyUP();
     void    keyDOWN();
     void    keyLEFT();
@@ -92,6 +116,12 @@ public:
     void    keyRETURN();
     void    keyBACKSPACE();
     void    keyDEL();
+    void    makeBgBlock(int textPos);
+    void    makeBgBlockRange(int bPos, int ePos);
+    
+    ofPoint textPosToPixel(int textPos);
+    
+
     
     
     

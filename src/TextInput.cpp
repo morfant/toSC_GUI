@@ -20,6 +20,8 @@ TextInput::TextInput(int x, int y){
     sel_boxCol = ofColor(255);
     nsel_boxCol = ofColor(0, 100, 200, 50);
     strokeCol = ofColor(0);
+    bgBlockCol = ofColor(0, 60, 100, 100);
+    bgBlockCol_warn = ofColor(150, 20, 40, 80);
     
 }
 
@@ -129,6 +131,9 @@ TextInput::update(){
     
 }
 
+
+
+
 void
 TextInput::draw(){
     
@@ -148,6 +153,9 @@ TextInput::draw(){
     ofPushMatrix();
         ofTranslate(posX, posY - bottomOver);
     
+        // bgBlock(if needed)
+    makeBgBlockRange(blockBegin, blockEnd);
+
         // Cursor
         ofPushStyle();
         ofSetColor(0, 0, 0, 255);
@@ -182,13 +190,23 @@ TextInput::keyPressed(int key) {
     if(isForcus == FORCUS){
         if (key >=32 && key <=126) {
             text.insert(text.begin()+textPos, key);
+            chkBracketsOpen(key);
+            chkBracketsClose(key);
+//            makeBgBlock(textPos);
             ++textPos;
             ++posInLine;
             cNumOfLines[lineNum] = getCharNumOfLine(lineNum, text); //include '\n'
+            
+
+            
         }
         
         if (key==OF_KEY_RETURN) {
             keyRETURN();
+//            cout<< "sumOfArray: " <<
+//            sumOfArray(lineNum, &cNumOfLines)
+//            << endl;
+            insertIndention(nTab);
             sendOSC("/test", text);
         }
         
@@ -215,6 +233,10 @@ TextInput::keyPressed(int key) {
             keyDOWN();
         }
 	}
+    
+//    cout << "textPos to PosX: " <<
+//    textPosToPixel(textPos)
+//    << endl;
     
 //    cout << "lineNum: " << lineNum << endl;
 //    cout << "numOfChar: " << cNumOfLines[lineNum] << endl;
@@ -289,12 +311,14 @@ TextInput::keyRETURN(){
     vector<int>::iterator it = cNumOfLines.begin()+lineNum;
     cNumOfLines.insert(it, getCharNumOfLine(lineNum, text));
     posInLine = 0;
+    nTabBool = false;
 }
 
 void
 TextInput::keyBACKSPACE(){ // erase + keyLEFT()
     if (textPos>0) {
         text.erase(text.begin() + (textPos - 1));
+        
         textPos--;
         posInLine--;
         if(posInLine == -1){
@@ -312,6 +336,8 @@ TextInput::keyDEL(){
     }
 }
 
+
+//----------------Calculate text pos----------------
 void
 TextInput::viewStringInChar(string text){
     size_t size = text.size();
@@ -347,6 +373,153 @@ TextInput::getFirstPos(int lineNum, string text){
     }
     return rslt;
 }
+
+
+//----------------Make blocks----------------
+void
+TextInput::makeBgBlockRange(int bPos, int ePos){
+    if(bPos < ePos){
+        for (size_t i = bPos; i < ePos; i++) {
+            makeBgBlock(i);
+        }
+    }else{
+        for (size_t i = bPos; i > ePos; i--) {
+            makeBgBlock(i);
+        }
+    }
+}
+
+void
+TextInput::makeBgBlock(int textPos){
+    ofPushStyle();
+    ofSetColor(bgBlockCol);
+    ofRect(textPosToPixel(textPos), fontWidth, fontHeight);
+    ofPopStyle();
+}
+
+ofPoint
+TextInput::textPosToPixel(int textPos){
+    int i = 0; // lineNum
+    ofPoint rsltPoint = ofPoint(0, 0);
+    
+    while (i < cNumOfLines.size()) {
+        if(sum(i, &cNumOfLines) > textPos){
+            rsltPoint.x = padL +
+            (fontWidth * (cNumOfLines[i] - (sum(i, &cNumOfLines) - textPos)));
+            
+            rsltPoint.y = padT + (i * fontHeight);
+            return rsltPoint;
+            break;
+        }else{
+            i++;
+        }
+    }
+}
+
+//----------------Auto Indentation----------------
+bool
+TextInput::chkBracketsOpen(int key){
+if(key == '(' || key == '[' || key == '{'){
+    BRACKET tBr;
+    tBr.pos = textPos;
+    if(key == '(' ){
+        tBr.bracketType = ROUND_BRACKET;
+    }else if(key == '['){
+        tBr.bracketType = SQUARE_BRACKET;
+    }else{
+        tBr.bracketType = BRACE;
+    }
+    openBrackets.push_back(tBr);
+
+    if (nTabBool == false) {
+        nTab++;
+        nTabBool = true;
+        cout << nTab << endl;
+    }
+}
+//    if(posOfBrackets.size() > 0){
+//        cout << "p1: " << posOfBrackets[0] << endl;
+//        cout << "p2: " << posOfBrackets[1] << endl;
+//    }
+}
+
+bool
+TextInput::chkBracketsClose(int key){
+    if(key == ')' || key == ']' || key == '}'){
+        BRACKET tBr;
+        tBr.pos = textPos;
+        if(key == ')' ){
+            tBr.bracketType = ROUND_BRACKET;
+            cout << "round c" << endl;
+        }else if(key == ']'){
+            tBr.bracketType = SQUARE_BRACKET;
+            cout << "square c" << endl;
+        }else{
+            tBr.bracketType = BRACE;
+            cout << "brace c" << endl;
+        }
+
+        closeBrackets.push_back(tBr); // insert to end.
+        
+        int tFlag = isSameShapeBracket();
+        if(tFlag == -1){
+            if (nTabBool == false && nTab > 0) {
+                nTab--;
+                nTabBool = true;
+                cout << nTab << endl;
+            }
+        }else{
+            blockEnd = textPos;
+            blockBegin = tFlag;
+            closeBrackets.pop_back();
+            
+            // make warning block from textPos to wrong open bracket.
+        }
+    }
+    //    if(posOfBrackets.size() > 0){
+    //        cout << "p1: " << posOfBrackets[0] << endl;
+    //        cout << "p2: " << posOfBrackets[1] << endl;
+    //    }
+}
+
+int
+TextInput::isSameShapeBracket(){
+    size_t size = closeBrackets.size();
+    if (size > 0) {
+        int idx = size;
+        if(closeBrackets.back().bracketType == (*(openBrackets.end() - idx)).bracketType){
+            cout << "same close bracket." << endl;
+            return -1;
+        }else{
+            cout << "not same close bracket." << (*(openBrackets.end() - idx)).pos << endl;
+            return (*(openBrackets.end() - idx)).pos;
+        }
+    }
+}
+
+void
+TextInput::insertIndention(int nTab){
+    // 4 spaces
+    while (nTab > 0) {
+        int i = 4;
+        while (i > 0) {
+            text.insert(text.begin()+textPos, ' ');
+            --i;
+            ++textPos;
+            ++posInLine;
+        }
+        --nTab;
+    }
+
+    // 1 tab = 8 spaces
+    //    while (nTab > 0) {
+    //        text.insert(text.begin()+textPos, '\t');
+    //        ++textPos;
+    //        --nTab;
+    //        cout << "indent" << endl;
+    //    }
+}
+
 
 //----------------Mouse event----------------
 void
