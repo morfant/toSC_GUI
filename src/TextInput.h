@@ -12,10 +12,7 @@
 #include "ofMain.h"
 #include "ofEvents.h"
 #include "Functions.h"
-#include "ofxOsc.h"
-
-#define HOST "localhost"
-#define PORT 57120
+#include "Osc.h"
 
 
 typedef enum {
@@ -108,7 +105,8 @@ public:
     vector<BRACKET> openBrackets;
     vector<BRACKET> closeBrackets;
     int     nTab = 0;
-    bool    nTabBool = false;
+    bool    nTabBoolo = false;
+    bool    nTabBoolc = false;
     void    insertIndention(int nTab);
     void    keyUP();
     void    keyDOWN();
@@ -124,18 +122,14 @@ public:
     vector<int> blockPos;
     
 
-    
-    
-    
+    // Osc
+    Osc*    pOsc;
     
     // update & draw
     void    update();
     void    draw();
 
     
-    // OSC
-    ofxOscSender sender;
-    void    sendOSC(string destAddr, string cmd);
     
 
     

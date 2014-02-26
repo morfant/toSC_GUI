@@ -1,5 +1,5 @@
 //
-//  pianoRoll.h
+//  PianoRoll.h
 //  toSC
 //
 //  Created by giy on 2/3/14.
@@ -14,6 +14,7 @@
 #include "PianoRollBlock.h"
 #include "Bar.h"
 #include "Button.h"
+#include "Osc.h"
 
 
 typedef enum { NORMAL = '1', WRITE, ERASE } MODE_STATE;
@@ -105,6 +106,10 @@ public:
     void setCurPos(int pos);
     void findLastBlockNum(int x);
 
+    
+    
+    // OSC
+    Osc*    pOsc;
     
     // update & draw
     void update();

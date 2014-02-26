@@ -13,7 +13,7 @@ Track::Track(){
     pPianoRoll = new PianoRoll();
     pTextInput = new TextInput(
         pPianoRoll->getPosX(),
-        pPianoRoll->getPosY());
+        pPianoRoll->getPosY(), 200, 600);
     pPianoRoll->init();
     pTextInput->init();
     

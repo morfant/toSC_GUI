@@ -35,10 +35,12 @@ TextInput::TextInput(int x, int y, int w, int h){
     
     textPanel = ofRectangle(x, y, width, height);
     
+    txtCol = ofColor(0);
     sel_boxCol = ofColor(255);
-    nsel_boxCol = ofColor(0, 100, 200);
+    nsel_boxCol = ofColor(0, 100, 200, 50);
     strokeCol = ofColor(0);
-    
+    bgBlockCol = ofColor(0, 60, 100, 100);
+    bgBlockCol_warn = ofColor(150, 20, 40, 80);    
 }
 
 TextInput::~TextInput(){
@@ -47,10 +49,7 @@ TextInput::~TextInput(){
 
 
 void
-TextInput::init() {
-	// open an outgoing connection to HOST:PORT
-	sender.setup(HOST, PORT);
-    
+TextInput::init() {    
     // Don't forget to use "ofEvents()".
 	ofAddListener(ofEvents().keyPressed, this, &TextInput::keyPressedEvent);
 	ofAddListener(ofEvents().mousePressed, this, &TextInput::mousePressedEvent);
@@ -59,6 +58,8 @@ TextInput::init() {
     for (int i = 0; i < lineLimit; ++i) {
         cNumOfLines.push_back(-1);
     }
+    
+    pOsc = new Osc("/test");
 }
 
 
@@ -211,8 +212,7 @@ TextInput::keyPressed(int key) {
 //            << endl;
             insertIndention(nTab);
             
-            
-            sendOSC("/test", text);
+            pOsc->sendOSC(text);
         }
         
         if (key==OF_KEY_BACKSPACE) {
@@ -316,7 +316,7 @@ TextInput::keyRETURN(){
     vector<int>::iterator it = cNumOfLines.begin()+lineNum;
     cNumOfLines.insert(it, getCharNumOfLine(lineNum, text));
     posInLine = 0;
-    nTabBool = false;
+    nTabBoolo = nTabBoolc = false;
 }
 
 void
@@ -463,10 +463,10 @@ if(key == '(' || key == '[' || key == '{'){
     }
     openBrackets.push_back(tBr);
 
-    if (nTabBool == false) {
+    if (nTabBoolo == false) {
         nTab++;
-        nTabBool = true;
-//        cout << nTab << endl;
+        nTabBoolo = true;
+        cout<< "inc nTab :" << nTab << endl;
     }
 }
 //    if(posOfBrackets.size() > 0){
@@ -501,34 +501,34 @@ void
 TextInput::chkBracketMatching(){
     size_t csize = closeBrackets.size();
     size_t osize = openBrackets.size();
-//    cout << "======" << size << endl;
-//    cout << "======!!!!!" << osize << endl;
+    cout << "======" << csize << endl;
+    cout << "======!!!!!" << osize << endl;
     if (csize > 0) {
         for (int i = csize; i > blockPos.size()/2 ; --i) {
-//            cout << "================" << endl;
-//            cout << closeBrackets[i - 1].bracketType << endl;
-//            cout << openBrackets[osize - i].bracketType << endl;
+            cout << "================" << endl;
+            cout << closeBrackets[i - 1].bracketType << endl;
+            cout << openBrackets[osize - i].bracketType << endl;
             
             if(closeBrackets[i - 1].bracketType != openBrackets[osize - i].bracketType){
                 vector<int>::iterator it = blockPos.begin();
                 blockPos.insert(it, closeBrackets[i - 1].pos);
                 blockPos.push_back(openBrackets[osize - i].pos);
-//                blockPos.push_back(100);
-//                cout << "NNNNNNN" << endl;
-//                for (int i = 0; i < blockPos.size(); i++) {
-//                    cout << i << " / " << blockPos[i] << endl;
-//                }
+                blockPos.push_back(100);
+                cout << "NNNNNNN" << endl;
+                for (int i = 0; i < blockPos.size(); i++) {
+                    cout << i << " / " << blockPos[i] << endl;
+                }
             }else{
-//                cout << "YYYYYYY" << endl;
-//
-//                for (int i = 0; i < blockPos.size(); i++) {
-//                    cout << i << " / " << blockPos[i] << endl;
-//                }
+                cout << "YYYYYYY" << endl;
+
+                for (int i = 0; i < blockPos.size(); i++) {
+                    cout << i << " / " << blockPos[i] << endl;
+                }
                 
-                if (nTabBool == false && nTab > 0) {
+                if (nTabBoolc == false && nTab > 0) {
                     nTab--;
-                    nTabBool = true;
-                    //                cout << nTab << endl;
+                    nTabBoolc = true;
+                    cout << "dec nTab :" << nTab << endl;
                     
                 }
                 
@@ -591,16 +591,5 @@ TextInput::mousePressed(int x, int y, int button){
         setFocus(NOT_FORCUS);
     }
 }
-
-
-// OSC
-void
-TextInput::sendOSC(string destAddr, string cmd){
-    ofxOscMessage m;
-    m.setAddress(destAddr);
-    m.addStringArg(cmd);
-    sender.sendMessage(m);
-}
-
 
 

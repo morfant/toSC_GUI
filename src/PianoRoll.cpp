@@ -1,5 +1,5 @@
 //
-//  pianoRoll.cpp
+//  PianoRoll.cpp
 //  toSC
 //
 //  Created by giy on 2/3/14.
@@ -56,6 +56,8 @@ PianoRoll::init(){
     // Don't forget to use "ofEvents()".
 	ofAddListener(ofEvents().keyPressed, this, &PianoRoll::keyPressedEvent);
 	ofAddListener(ofEvents().mousePressed, this, &PianoRoll::mousePressedEvent);
+    
+    pOsc = new Osc("/test");
 }
 
 // POSITION
@@ -254,6 +256,7 @@ void
 PianoRoll::isHit(){
         if (curPos >= blocks[lastBlockNum]->getBeginX()) {
             cout << "send osc to SC!" << endl;
+//            pOsc->sendOSC("");
             ++lastBlockNum;
         }
         if (atEnd == TRUE) {
@@ -309,7 +312,7 @@ PianoRoll::update(){
         if (lastBlockNum != -1 && blocks.size() != 0) {
             if (curPos >= blocks[lastBlockNum]->getBeginX()) {
                 cout << "send osc to SC!" << endl;
-//                sendOSC("/test", *text);                
+//                pOsc->sendOSC("");                
                 cout << lastBlockNum << endl;
                 if(lastBlockNum < (blocks.size() - 1)){
                     ++lastBlockNum;

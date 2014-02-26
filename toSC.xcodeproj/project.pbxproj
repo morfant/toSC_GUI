@@ -15,6 +15,7 @@
 		62545d179c94265ca1389d4a /* OscOutboundPacketStream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 63a47ac60ffafc3bf093ec0f /* OscOutboundPacketStream.cpp */; };
 		640279ee111671bd026cb013 /* ofxOscReceiver.cpp in Sources */ = {isa = PBXBuildFile; fileRef = c2fac65c491d4231379f3298 /* ofxOscReceiver.cpp */; };
 		6713AC0718B37E5700C096DB /* Functions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6713AC0618B37E5700C096DB /* Functions.cpp */; };
+		6714E9FC18BDE1900088B5BF /* Osc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6714E9FA18BDE1900088B5BF /* Osc.cpp */; };
 		671A797418B2F48B0009FDDE /* Bar.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 671A797218B2F48B0009FDDE /* Bar.cpp */; };
 		671A797718B2F8DD0009FDDE /* Button.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 671A797518B2F8DD0009FDDE /* Button.cpp */; };
 		671F9AA418745E1600CD5652 /* TextInput.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 671F9AA218745E1500CD5652 /* TextInput.cpp */; };
@@ -97,6 +98,8 @@
 		65eefa3da3526e9cdd9c21f9 /* ofxOscBundle.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = ofxOscBundle.cpp; path = ../../../addons/ofxOsc/src/ofxOscBundle.cpp; sourceTree = SOURCE_ROOT; };
 		6713AC0418B3799D00C096DB /* Functions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Functions.h; sourceTree = "<group>"; };
 		6713AC0618B37E5700C096DB /* Functions.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Functions.cpp; sourceTree = "<group>"; };
+		6714E9FA18BDE1900088B5BF /* Osc.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Osc.cpp; sourceTree = "<group>"; };
+		6714E9FB18BDE1900088B5BF /* Osc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Osc.h; sourceTree = "<group>"; };
 		671A797218B2F48B0009FDDE /* Bar.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Bar.cpp; sourceTree = "<group>"; };
 		671A797318B2F48B0009FDDE /* Bar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Bar.h; sourceTree = "<group>"; };
 		671A797518B2F8DD0009FDDE /* Button.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Button.cpp; sourceTree = "<group>"; };
@@ -236,6 +239,8 @@
 				671A797618B2F8DD0009FDDE /* Button.h */,
 				6713AC0418B3799D00C096DB /* Functions.h */,
 				6713AC0618B37E5700C096DB /* Functions.cpp */,
+				6714E9FA18BDE1900088B5BF /* Osc.cpp */,
+				6714E9FB18BDE1900088B5BF /* Osc.h */,
 			);
 			name = class;
 			sourceTree = "<group>";
@@ -505,6 +510,7 @@
 				0546d1a38e13bd319cc9755b /* OscReceivedElements.cpp in Sources */,
 				671A797718B2F8DD0009FDDE /* Button.cpp in Sources */,
 				62545d179c94265ca1389d4a /* OscOutboundPacketStream.cpp in Sources */,
+				6714E9FC18BDE1900088B5BF /* Osc.cpp in Sources */,
 				c4782ecc372420ace0615b74 /* OscPrintReceivedElements.cpp in Sources */,
 				879a251454401bc0b6e4f238 /* OscTypes.cpp in Sources */,
 			);
