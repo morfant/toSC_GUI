@@ -103,7 +103,8 @@ public:
     void    viewStringInChar(string text);
     bool    chkBracketsOpen(int key);
     bool    chkBracketsClose(int key);
-    int    isSameShapeBracket();
+    void    chkBracketMatching();
+    int     isSameShapeBracket();
     vector<BRACKET> openBrackets;
     vector<BRACKET> closeBrackets;
     int     nTab = 0;
@@ -120,6 +121,7 @@ public:
     void    makeBgBlockRange(int bPos, int ePos);
     
     ofPoint textPosToPixel(int textPos);
+    vector<int> blockPos;
     
 
     

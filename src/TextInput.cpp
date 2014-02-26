@@ -22,7 +22,6 @@ TextInput::TextInput(int x, int y){
     strokeCol = ofColor(0);
     bgBlockCol = ofColor(0, 60, 100, 100);
     bgBlockCol_warn = ofColor(150, 20, 40, 80);
-    
 }
 
 
@@ -60,7 +59,6 @@ TextInput::init() {
     for (int i = 0; i < lineLimit; ++i) {
         cNumOfLines.push_back(-1);
     }
-
 }
 
 
@@ -154,7 +152,9 @@ TextInput::draw(){
         ofTranslate(posX, posY - bottomOver);
     
         // bgBlock(if needed)
-    makeBgBlockRange(blockBegin, blockEnd);
+    for (size_t i = 0; i < (blockPos.size()/2); ++i) {
+        makeBgBlockRange(blockPos[blockPos.size() - 1 - i], blockPos[i]);
+    }
 
         // Cursor
         ofPushStyle();
@@ -188,6 +188,9 @@ TextInput::keyPressedEvent(ofKeyEventArgs &a) {
 void
 TextInput::keyPressed(int key) {
     if(isForcus == FORCUS){
+
+        
+        
         if (key >=32 && key <=126) {
             text.insert(text.begin()+textPos, key);
             chkBracketsOpen(key);
@@ -207,6 +210,8 @@ TextInput::keyPressed(int key) {
 //            sumOfArray(lineNum, &cNumOfLines)
 //            << endl;
             insertIndention(nTab);
+            
+            
             sendOSC("/test", text);
         }
         
@@ -317,15 +322,42 @@ TextInput::keyRETURN(){
 void
 TextInput::keyBACKSPACE(){ // erase + keyLEFT()
     if (textPos>0) {
+        char dest = *(text.begin()+(textPos-1));
+        
+        if (dest == '(' || dest == '{' || dest == '[' ||
+            dest == ')' || dest == '}' || dest == ']') {
+            vector<BRACKET>::iterator ito = openBrackets.begin();
+            for (size_t i = 0; i < openBrackets.size(); ++i) {
+                if(openBrackets[i].pos == (textPos - 1)){
+                    openBrackets.erase(ito + i);
+                    cout << "erase in OPEN brackest!" << endl;
+                    cout <<"size of OB: " << openBrackets.size() << endl;
+                }
+            }
+            vector<BRACKET>::iterator itc = closeBrackets.begin();
+            for (size_t i = 0; i < closeBrackets.size(); ++i) {
+                if(closeBrackets[i].pos == (textPos - 1)){
+                    closeBrackets.erase(itc + i);
+                    cout << "erase in CLOSE brackest!" << endl;
+                    cout <<"size of CB: " << closeBrackets.size() << endl;
+                }
+            }
+            
+            vector<int>::iterator itr = blockPos.begin();
+            vector<int>::iterator ritr = blockPos.end();
+            for(size_t i = 0; i < blockPos.size()/2; ++i){
+                if(blockPos[i] == (textPos - 1)){
+                    blockPos.erase(ritr - 1 - i);
+                    blockPos.erase(itr + i);
+                    cout << "size of blockPos: " << blockPos.size() << endl;
+                }
+            }
+        }
+
+        
         text.erase(text.begin() + (textPos - 1));
         
-        textPos--;
-        posInLine--;
-        if(posInLine == -1){
-            //            cout << "LINE UP" << endl;
-            lineNum--;
-            posInLine = cNumOfLines[lineNum] - 1;
-        }
+        keyLEFT();
     }
 }
 
@@ -434,7 +466,7 @@ if(key == '(' || key == '[' || key == '{'){
     if (nTabBool == false) {
         nTab++;
         nTabBool = true;
-        cout << nTab << endl;
+//        cout << nTab << endl;
     }
 }
 //    if(posOfBrackets.size() > 0){
@@ -450,36 +482,60 @@ TextInput::chkBracketsClose(int key){
         tBr.pos = textPos;
         if(key == ')' ){
             tBr.bracketType = ROUND_BRACKET;
-            cout << "round c" << endl;
+//            cout << "round c" << endl;
         }else if(key == ']'){
             tBr.bracketType = SQUARE_BRACKET;
-            cout << "square c" << endl;
+//            cout << "square c" << endl;
         }else{
             tBr.bracketType = BRACE;
-            cout << "brace c" << endl;
+//            cout << "brace c" << endl;
         }
 
         closeBrackets.push_back(tBr); // insert to end.
-        
-        int tFlag = isSameShapeBracket();
-        if(tFlag == -1){
-            if (nTabBool == false && nTab > 0) {
-                nTab--;
-                nTabBool = true;
-                cout << nTab << endl;
-            }
-        }else{
-            blockEnd = textPos;
-            blockBegin = tFlag;
-            closeBrackets.pop_back();
+        cout << "size of closebracket: " << closeBrackets.size() << endl;
+        chkBracketMatching();
+    }
+}
+
+void
+TextInput::chkBracketMatching(){
+    size_t csize = closeBrackets.size();
+    size_t osize = openBrackets.size();
+//    cout << "======" << size << endl;
+//    cout << "======!!!!!" << osize << endl;
+    if (csize > 0) {
+        for (int i = csize; i > blockPos.size()/2 ; --i) {
+//            cout << "================" << endl;
+//            cout << closeBrackets[i - 1].bracketType << endl;
+//            cout << openBrackets[osize - i].bracketType << endl;
             
-            // make warning block from textPos to wrong open bracket.
+            if(closeBrackets[i - 1].bracketType != openBrackets[osize - i].bracketType){
+                vector<int>::iterator it = blockPos.begin();
+                blockPos.insert(it, closeBrackets[i - 1].pos);
+                blockPos.push_back(openBrackets[osize - i].pos);
+//                blockPos.push_back(100);
+//                cout << "NNNNNNN" << endl;
+//                for (int i = 0; i < blockPos.size(); i++) {
+//                    cout << i << " / " << blockPos[i] << endl;
+//                }
+            }else{
+//                cout << "YYYYYYY" << endl;
+//
+//                for (int i = 0; i < blockPos.size(); i++) {
+//                    cout << i << " / " << blockPos[i] << endl;
+//                }
+                
+                if (nTabBool == false && nTab > 0) {
+                    nTab--;
+                    nTabBool = true;
+                    //                cout << nTab << endl;
+                    
+                }
+                
+                
+            }
         }
     }
-    //    if(posOfBrackets.size() > 0){
-    //        cout << "p1: " << posOfBrackets[0] << endl;
-    //        cout << "p2: " << posOfBrackets[1] << endl;
-    //    }
 }
 
 int
