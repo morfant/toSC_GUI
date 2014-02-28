@@ -10,6 +10,10 @@
 
 Osc::Osc(string addrP){
     addrPattern = addrP;
+
+    // open an outgoing connection to HOST:PORT
+    sender.setup(host, port);
+    
 };
 
 Osc::~Osc(){
@@ -17,8 +21,6 @@ Osc::~Osc(){
 
 void
 Osc::init(){
-    // open an outgoing connection to HOST:PORT
-    sender.setup(host, port);
 }
 
 

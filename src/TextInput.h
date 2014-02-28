@@ -100,7 +100,9 @@ public:
     void    viewStringInChar(string text);
     bool    chkBracketsOpen(int key);
     bool    chkBracketsClose(int key);
-    void    chkBracketMatching();
+//    void    chkBracketMatching();
+    bool    chkBracketMatching(int nStage);
+    int     getNstageInBrackets();
     int     isSameShapeBracket();
     vector<BRACKET> openBrackets;
     vector<BRACKET> closeBrackets;

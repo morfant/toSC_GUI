@@ -493,49 +493,73 @@ TextInput::chkBracketsClose(int key){
 
         closeBrackets.push_back(tBr); // insert to end.
         cout << "size of closebracket: " << closeBrackets.size() << endl;
-        chkBracketMatching();
     }
 }
 
-void
-TextInput::chkBracketMatching(){
+//void
+//TextInput::chkBracketMatching(){
+//    size_t csize = closeBrackets.size();
+//    size_t osize = openBrackets.size();
+//    cout << "======" << csize << endl;
+//    cout << "======!!!!!" << osize << endl;
+//    if (csize > 0) {
+//        for (int i = csize; i > blockPos.size()/2 ; --i) {
+//            cout << "================" << endl;
+//            cout << closeBrackets[i - 1].bracketType << endl;
+//            cout << openBrackets[osize - i].bracketType << endl;
+//            
+//            if(closeBrackets[i - 1].bracketType != openBrackets[osize - i].bracketType){
+//                vector<int>::iterator it = blockPos.begin();
+//                blockPos.insert(it, closeBrackets[i - 1].pos);
+//                blockPos.push_back(openBrackets[osize - i].pos);
+//                cout << "NNNNNNN" << endl;
+//                for (int i = 0; i < blockPos.size(); i++) {
+//                    cout << i << " / " << blockPos[i] << endl;
+//                }
+//            }
+//            else{
+//                cout << "YYYYYYY" << endl;
+//
+//                for (int i = 0; i < blockPos.size(); i++) {
+//                    cout << i << " / " << blockPos[i] << endl;
+//                }
+//                
+//                if (nTabBoolc == false && nTab > 0) {
+//                    nTab--;
+//                    nTabBoolc = true;
+//                    cout << "dec nTab :" << nTab << endl;
+//                    
+//                }
+//            }
+//        }
+//    }
+//}
+
+
+bool
+TextInput::chkBracketMatching(int nStage){
     size_t csize = closeBrackets.size();
     size_t osize = openBrackets.size();
     cout << "======" << csize << endl;
     cout << "======!!!!!" << osize << endl;
+    
     if (csize > 0) {
-        for (int i = csize; i > blockPos.size()/2 ; --i) {
-            cout << "================" << endl;
-            cout << closeBrackets[i - 1].bracketType << endl;
-            cout << openBrackets[osize - i].bracketType << endl;
-            
-            if(closeBrackets[i - 1].bracketType != openBrackets[osize - i].bracketType){
-                vector<int>::iterator it = blockPos.begin();
-                blockPos.insert(it, closeBrackets[i - 1].pos);
-                blockPos.push_back(openBrackets[osize - i].pos);
-                blockPos.push_back(100);
-                cout << "NNNNNNN" << endl;
-                for (int i = 0; i < blockPos.size(); i++) {
-                    cout << i << " / " << blockPos[i] << endl;
-                }
-            }else{
-                cout << "YYYYYYY" << endl;
-
-                for (int i = 0; i < blockPos.size(); i++) {
-                    cout << i << " / " << blockPos[i] << endl;
-                }
-                
-                if (nTabBoolc == false && nTab > 0) {
-                    nTab--;
-                    nTabBoolc = true;
-                    cout << "dec nTab :" << nTab << endl;
-                    
-                }
-                
-                
-            }
+        cout << "================" << endl;
+        cout << closeBrackets[nStage - 1].bracketType << endl;
+        cout << openBrackets[osize - nStage].bracketType << endl;
+        
+        if(closeBrackets[nStage].bracketType
+           == openBrackets[(osize - 1) - nStage].bracketType){
+            return true;
+        }else{
+            return false;
         }
     }
+}
+
+int
+TextInput::getNstageInBrackets(){
+    
 }
 
 int
