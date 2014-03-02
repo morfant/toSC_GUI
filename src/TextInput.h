@@ -64,6 +64,11 @@ protected:
 
 
     
+    int     nTab = 0;
+    bool    nTabBoolo = false;
+    bool    nTabBoolc = false;
+    
+    
 public:
 
     
@@ -101,15 +106,15 @@ public:
     bool    chkBracketsOpen(int key);
     bool    chkBracketsClose(int key);
 //    void    chkBracketMatching();
-    bool    chkBracketMatching(int nStage);
-    int     getNstageInBrackets();
+    bool    chkBracketCloseMatching(int nStage);
+    int     getNstageInOpenBrackets();
+    int     getNstageInCloseBrackets();
     int     isSameShapeBracket();
     vector<BRACKET> openBrackets;
     vector<BRACKET> closeBrackets;
-    int     nTab = 0;
-    bool    nTabBoolo = false;
-    bool    nTabBoolc = false;
     void    insertIndention(int nTab);
+    void    removeIndention(int nTab);
+    
     void    keyUP();
     void    keyDOWN();
     void    keyLEFT();

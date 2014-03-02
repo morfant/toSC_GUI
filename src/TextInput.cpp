@@ -190,6 +190,7 @@ void
 TextInput::keyPressed(int key) {
     if(isForcus == FORCUS){
 
+        nTab = getNstageInOpenBrackets();
         
         
         if (key >=32 && key <=126) {
@@ -239,6 +240,11 @@ TextInput::keyPressed(int key) {
         }
 	}
     
+    
+    
+//    cout << "nstage: " << getNstageInBrackets() << endl;
+    cout << getNstageInOpenBrackets() << endl;
+    cout << getNstageInCloseBrackets() << endl;
 //    cout << "textPos to PosX: " <<
 //    textPosToPixel(textPos)
 //    << endl;
@@ -313,6 +319,8 @@ TextInput::keyRETURN(){
     cNumOfLines[lineNum] = getCharNumOfLine(lineNum, text);
     ++textPos;
     ++lineNum;
+    
+    // when key ENTER splits previous line
     vector<int>::iterator it = cNumOfLines.begin()+lineNum;
     cNumOfLines.insert(it, getCharNumOfLine(lineNum, text));
     posInLine = 0;
@@ -448,7 +456,7 @@ TextInput::textPosToPixel(int textPos){
     }
 }
 
-//----------------Auto Indentation----------------
+//----------------Auto Indentation Function----------------
 bool
 TextInput::chkBracketsOpen(int key){
 if(key == '(' || key == '[' || key == '{'){
@@ -463,11 +471,11 @@ if(key == '(' || key == '[' || key == '{'){
     }
     openBrackets.push_back(tBr);
 
-    if (nTabBoolo == false) {
-        nTab++;
-        nTabBoolo = true;
-        cout<< "inc nTab :" << nTab << endl;
-    }
+//    if (nTabBoolo == false) {
+//        nTab++;
+//        nTabBoolo = true;
+//        cout<< "inc nTab :" << nTab << endl;
+//    }
 }
 //    if(posOfBrackets.size() > 0){
 //        cout << "p1: " << posOfBrackets[0] << endl;
@@ -537,7 +545,7 @@ TextInput::chkBracketsClose(int key){
 
 
 bool
-TextInput::chkBracketMatching(int nStage){
+TextInput::chkBracketCloseMatching(int nStage){
     size_t csize = closeBrackets.size();
     size_t osize = openBrackets.size();
     cout << "======" << csize << endl;
@@ -558,28 +566,65 @@ TextInput::chkBracketMatching(int nStage){
 }
 
 int
-TextInput::getNstageInBrackets(){
+TextInput::getNstageInOpenBrackets(){
+    size_t i = 0;
+
+    while (i < openBrackets.size()) {
+//        cout << "textPos: " << textPos << endl;
+//            cout << "ii: " << openBrackets[i].pos << endl;
+            if(textPos > openBrackets[i].pos){
+                ++i;
+                if(i == openBrackets.size()){
+                    return i;
+                }
+            }else{
+//                cout << "return i :" << i << endl;
+                return i;
+            }
+        }
     
+    return 0;
 }
 
 int
-TextInput::isSameShapeBracket(){
-    size_t size = closeBrackets.size();
-    if (size > 0) {
-        int idx = size;
-        if(closeBrackets.back().bracketType == (*(openBrackets.end() - idx)).bracketType){
-            cout << "same close bracket." << endl;
-            return -1;
+TextInput::getNstageInCloseBrackets(){
+    size_t i = 0;
+    
+    while (i < closeBrackets.size()) {
+        //        cout << "textPos: " << textPos << endl;
+        //            cout << "ii: " << openBrackets[i].pos << endl;
+        if(textPos > closeBrackets[i].pos){
+            ++i;
+            if(i == closeBrackets.size()){
+                return i;
+            }
         }else{
-            cout << "not same close bracket." << (*(openBrackets.end() - idx)).pos << endl;
-            return (*(openBrackets.end() - idx)).pos;
+            //                cout << "return i :" << i << endl;
+            return i;
         }
     }
+    
+    return 0;
 }
+
+//int
+//TextInput::isSameShapeBracket(){
+//    size_t size = closeBrackets.size();
+//    if (size > 0) {
+//        int idx = size;
+//        if(closeBrackets.back().bracketType == (*(openBrackets.end() - idx)).bracketType){
+//            cout << "same close bracket." << endl;
+//            return -1;
+//        }else{
+//            cout << "not same close bracket." << (*(openBrackets.end() - idx)).pos << endl;
+//            return (*(openBrackets.end() - idx)).pos;
+//        }
+//    }
+//}
 
 void
 TextInput::insertIndention(int nTab){
-    // 4 spaces
+    // +4 spaces
     while (nTab > 0) {
         int i = 4;
         while (i > 0) {
@@ -599,6 +644,23 @@ TextInput::insertIndention(int nTab){
     //        cout << "indent" << endl;
     //    }
 }
+
+void
+TextInput::removeIndention(int nTab){
+    // - 4 spaces
+    while (nTab > 0) {
+        int i = 4;
+        while (i > 0) {
+//            text.erase(text.begin() + textPos);
+            keyDEL();
+            --i;
+            --textPos;
+            --posInLine;
+        }
+        --nTab;
+    }
+}
+
 
 
 //----------------Mouse event----------------
